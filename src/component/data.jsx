@@ -1,5 +1,7 @@
 
 import photo from "./../Images/photo.png"
+import { Home, ShoppingBag, Utensils, Hospital, School, Dumbbell, Theater, Plane, Heart, Car } from "lucide-react";
+
 
 // Gemini City
 export const cities = [
@@ -1828,6 +1830,10 @@ export const cities = [
 // Gemini Category
 export const businessCategory = [
     {
+        name: "Test",
+        subCategory: []
+    },
+    {
         name: "Food",
         subCategory: [
             {
@@ -2043,8 +2049,7 @@ export const businessCategory = [
     }
 ];
 
-
-// Businesses
+//Gemini Businesses
 export const businesses = [
     // --- Bhiwandi ---
     {
@@ -7515,3 +7520,16 @@ export const businesses = [
     }
 ];
 
+
+export const gridCategoryData = [
+    { name: "Shops", path: "/shops", icon: <ShoppingBag size={28} /> },
+    { name: "Housing Societies", path: "/housing", icon: <Home size={28} /> },
+    { name: "Restaurants", path: "/restaurants", icon: <Utensils size={28} /> },
+    { name: "Hospitals & Clinics", path: "/hospitals", icon: <Hospital size={28} /> },
+    { name: "Schools & Colleges", path: "/schools", icon: <School size={28} /> },
+    { name: "Sports & Gyms", path: "/sports", icon: <Dumbbell size={28} /> },
+    { name: "Events & Entertainment", path: "/events", icon: <Theater size={28} /> },
+    { name: "Travel & Tourism", path: "/travel", icon: <Plane size={28} /> },
+    { name: "Beauty & Wellness", path: "/wellness", icon: <Heart size={28} /> },
+    { name: "Automobile Services", path: "/automobile", icon: <Car size={28} /> },
+];

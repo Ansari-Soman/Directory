@@ -1,4 +1,5 @@
 export const SelectInput = ({ label, name, options, value, onChange, disable }) => {
+
     return (
         <div className="w-[300px]">
             <label className="font-semibold text-gray-600 ">{label}: </label> <br />
@@ -14,10 +15,12 @@ export const SelectInput = ({ label, name, options, value, onChange, disable }) 
             >
                 <option value="">All {label}</option>
                 {options.map((item, i) => (
+                    
                     <option key={i} value={item.name || item}>
                         {item.name || item}
                     </option>
                 ))}
+
             </select>
         </div>
     )

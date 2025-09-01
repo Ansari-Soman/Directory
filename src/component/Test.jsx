@@ -1,10 +1,11 @@
 import React from 'react'
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 const Test = () => {
+  const location = useLocation()
+  console.log("in loca >> ",location)
     const { test } = useParams(); // get category from URL
     // const category = "Food"
-    console.log("use paramas",test)
   return (
     <div>Test</div>
   )

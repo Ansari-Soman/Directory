@@ -3,42 +3,40 @@ import BusinessList from './BusinessList.jsx'
 import { cities, businessCategory, businesses } from './data'
 import { SelectInput } from './SelectInput.jsx'
 import { DirectoryContext } from '../Context.jsx'
+import { useNavigate } from 'react-router-dom'
 
 const FilterPage = () => {
-    const { filterActive, setFilterActive } = useContext(DirectoryContext)
-    const [filters, setFilters] = useState({
-        city: "",
-        category: "",
-        subCategory: ""
-    })
+    const { filters, setFilters, setFilterActive } = useContext(DirectoryContext)
 
+    const { businessList, setBusinessList } = useContext(DirectoryContext)
+    const [subCateList, setSubCateList] = useState([])
+    const navigate = useNavigate();
+
+
+    // 🔹 Handle select changes
     const handleFilterChange = (key, value) => {
-        if (key === "category") {
-            const found = businessCategory.find((bc) => bc.name === value);
-
-            if (found) {
-                const subCategory = found.subCategory.map(item => item.name)
-                setSubCateList(subCategory)
-            } else {
-                setSubCateList([])
-                setFilters({ ...filters, [key]: value })
-
-            }
-        }
-
-        setFilters({ ...filters, [key]: value })
-
-
+        setFilters(prev => ({ ...prev, [key]: value }))
     }
 
+    // 🔹 Update subcategory list whenever category changes
+    useEffect(() => {
+        setBusinessList(businesses)
+        if (filters.category) {
+            const found = businessCategory.find(bc => bc.name === filters.category)
+            if (found) {
+                setSubCateList(found.subCategory.map(item => item.name))
+            } else {
+                setSubCateList([])
+            }
+        } else {
+            setSubCateList([])
+        }
+    }, [filters.category])
 
-    const [businessList, setBusinessList] = useState([])
-    const [subCateList, setSubCateList] = useState([])
 
 
 
-
-    // useEffect(() => {
+    // 🔹 Apply filters
     const applyFilter = () => {
         if (filters.city) {
             let result = businesses;
@@ -51,22 +49,16 @@ const FilterPage = () => {
             if (filters.subCategory) {
                 result = result.filter(biz => biz.subCategory === filters.subCategory)
             }
-            // if (filters.area) {
-            //     result = result.filter(biz => biz.area === filters.area)
-            // } 
             setBusinessList(result)
         } else {
             setBusinessList([])
         }
-
     }
-    // }, [filters])
 
-    return <>
-        (
-        <div className="fixed inset-0  flex items-center justify-center backdrop-blur-lg  bg-opacity-50 z-50">
+    return (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-lg bg-opacity-50 z-50">
             {/* Modal Container */}
-            <div className="relative bg-white w-[90%] max-w-lg rounded-2xl shadow-2xl p-6 animate-fadeIn">
+            <div className="relative bg-white w-[1000px] border-2 rounded-2xl shadow-2xl p-6 animate-fadeIn">
 
                 {/* Close Button */}
                 <button
@@ -80,7 +72,7 @@ const FilterPage = () => {
                 <h1 className="font-bold text-2xl text-center mb-6">City Directory Search</h1>
 
                 {/* Inputs */}
-                <div className="grid gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     <SelectInput
                         label="City"
                         name="city"
@@ -119,10 +111,7 @@ const FilterPage = () => {
                 </button>
             </div>
         </div>
-        )
-
-    </>
-
+    )
 }
 
 export default FilterPage
