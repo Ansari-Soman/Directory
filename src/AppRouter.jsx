@@ -2,25 +2,25 @@ import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
 import Header from "./component/Header"
 import CategoriesGrid from "./component/CategoriesGrid"
 import  Search  from "./component/Search"
-import { CityProvider, DirectoryContext } from "./Context"
-// import { ShoppingBag, Utensils, Shirt, Car, HeartPulse, Monitor, Book } from "lucide-react"; 
-
+import {  DirectoryContext } from "./Context"
 import Test from "./component/Test"
 import BusinessList from "./component/BusinessList"
 import FilterPage from "./component/FilterPage"
+import Result from "./component/Result"
 import { useContext, useEffect } from "react"
 import { businesses } from "./component/data"
+import Listing from "./component/Listing"
 
 
 const MainComponent = () => {
-    const { filterActive, setBusinessList } = useContext(DirectoryContext)
+    const { filterActive } = useContext(DirectoryContext)
 
 
     const Layout = () => {
         return (
             <>
                 <Header />
-                <Outlet /> {/* This is where child routes render */}
+                <Outlet /> 
                 {filterActive && <FilterPage />}
             </>
         );
@@ -41,8 +41,12 @@ const MainComponent = () => {
                     ),
                 },
                 {
+                    path: "/listing",
+                    element: <Listing />
+                },
+                {
                     path: "/result",
-                    element: <Test />
+                    element: <Result />
                 },
                 {
                     path: "/shops",
@@ -75,9 +79,6 @@ const MainComponent = () => {
             ],
         },
     ]);
-    useEffect(() => {
-        setBusinessList(businesses)
-    }, [])
     return (
              
         <RouterProvider router={routers} />

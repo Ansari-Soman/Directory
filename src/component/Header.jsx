@@ -3,9 +3,26 @@ import { Link } from 'react-router-dom'
 import { cities } from './data'
 import LocationSearch from './LocationSearch'
 import { DirectoryContext } from '../Context'
+import axios from 'axios';
 
 const Header = () => {
+    // const axios = require('axios');
 
+    // Make a request for a user with a given ID
+    axios.get('http://localhost:8083/api/city/list', {
+        headers: { "app_code": "dir" }
+    })
+        .then(function (response) {
+            // handle success
+            console.log("city list", response);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .finally(function () {
+            // always executed
+        });
     return (
         <header className="w-full bg-white shadow-md ">
             <div className="container mx-auto flex items-center justify-between px-6 py-3">
@@ -21,9 +38,9 @@ const Header = () => {
                 <div className="flex items-center space-x-4">
                     <LocationSearch />
                     {/* Free Listing */}
-                    <button className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition">
+                    <Link to='/listing' className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition">
                         Free Listing
-                    </button>
+                    </Link>
 
                     {/* Login / Signup */}
                     <button className="px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition">

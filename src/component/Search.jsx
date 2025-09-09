@@ -4,9 +4,9 @@ import { DirectoryContext } from "../Context";
 const Search = () => {
     const {filterActive, setFilterActive}= useContext(DirectoryContext)
     return (
-        <section className="h-[350px] w-full py-16 flex justify-center items-center bg-gray-100">
+        <section className="h-[390px] w-full py-16 flex justify-center items-center bg-gray-100">
             <div className="flex flex-col items-center gap-8 px-4 w-full max-w-2xl">
-                <h1 className="text- text-3xl font-bold">Start Exploring Today</h1>
+                <h1 className="text- text-3xl font-bold text-gray-800">Start Exploring Today</h1>
                 {/* Search Input */}
                 <div className="w-full flex items-center rounded-lg border border-gray-300 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 overflow-hidden">
                     <input
