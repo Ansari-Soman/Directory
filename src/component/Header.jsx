@@ -6,23 +6,7 @@ import { DirectoryContext } from '../Context'
 import axios from 'axios';
 
 const Header = () => {
-    // const axios = require('axios');
 
-    // Make a request for a user with a given ID
-    axios.get('http://localhost:8083/api/city/list', {
-        headers: { "app_code": "dir" }
-    })
-        .then(function (response) {
-            // handle success
-            console.log("city list", response);
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error);
-        })
-        .finally(function () {
-            // always executed
-        });
     return (
         <header className="w-full bg-white shadow-md ">
             <div className="container mx-auto flex items-center justify-between px-6 py-3">
