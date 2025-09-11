@@ -4,23 +4,23 @@ import axios from 'axios';
 import ListingBusiName from './ListingBusiName';
 import ListingSubArea from './ListingSubArea';
 import ListingArea from './ListingArea'
+import ListingRoad from './ListingRoad';
 
 
 const BusinessListingForm = () => {
-  const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState({
     cities: true,  // Start with true since we're loading on mount
     areas: false,
     subAreas: false,
   });
   const [error, setError] = useState(null);
-  const [cityData, setCityData] = useState([])
+  const [cityData, setCityData] = useState(null)
 
   const [currentStep, setCurrentStep] = useState(1);
   const [dataObj, setDataObj] = useState({
+    cityList: [],
     cityData: {},
-    area: {},
-    subArea: {},
+    roads: {},
   })
 
 
@@ -28,13 +28,7 @@ const BusinessListingForm = () => {
     businessName: '',
     city: '',
     area: '',
-    subarea: '',
-    category: '',
-    address: '',
-    phone: '',
-    email: '',
-    hours: '',
-    description: ''
+    subArea: '',
   });
 
   // Fetching City list
@@ -45,7 +39,7 @@ const BusinessListingForm = () => {
         const res = await axios.get('http://localhost:8083/api/city/list', {
           headers: { "application": "dir" }
         });
-        setCities(res.data.record);
+        handleDataObj("cityList", res.data.record);
       } catch (error) {
         console.log(error);
         setError('Failed to load cities');
@@ -58,6 +52,7 @@ const BusinessListingForm = () => {
   }, []);
 
 
+  // Fethcing City Data
   useEffect(() => {
     const fetchCityData = async () => {
       if (!formData.city) return;
@@ -67,7 +62,8 @@ const BusinessListingForm = () => {
           headers: { "application": "dir" }
         });
         setCityData(res.data.record[0] || { area: [] })
-        handleFormData('cityData', res.data.record[0])
+        handleDataObj('cityData', res.data.record[0])
+        console.log("")
       } catch (error) {
         console.log(error)
         setCityData({ area: [] })
@@ -80,7 +76,7 @@ const BusinessListingForm = () => {
   }, [formData.city])
 
 
-  const handleFormData = (field, value) => {
+  const handleDataObj = (field, value) => {
     setDataObj((prev => (
       {
         ...prev,
@@ -90,8 +86,17 @@ const BusinessListingForm = () => {
   }
 
   useEffect(() => {
-    console.log("data obj === ", dataObj)
-  }, [dataObj])
+    if (!cityData) return;
+    handleDataObj('roads', cityData.roads)
+  }, [cityData])
+
+  useEffect(() => {
+    console.log("fooorrramm data === ", formData)
+  }, [formData])
+
+  // useEffect(() => {
+  //   console.log("data obj === ", dataObj)
+  // }, [dataObj])
 
 
   const handleInputChange = (field, value) => {
@@ -109,150 +114,10 @@ const BusinessListingForm = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
-  const renderProgressBar = () => (
-    <div className="mb-8">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-blue-600">Step {currentStep} of 6</span>
-        <span className="text-sm text-gray-500">{Math.round((currentStep / 6) * 100)}% Complete</span>
-      </div>
-      <div className="w-full bg-gray-200 rounded-full h-2">
-        <div
-          className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out"
-          style={{ width: `${(currentStep / 6) * 100}%` }}
-        ></div>
-      </div>
-    </div>
-  );
-
-
-
-
-  // const renderStep3 = () => (
-  //   <div className="space-y-6">
-  //     <div className="text-center mb-8">
-  //       <Building2 className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-  //       <h2 className="text-3xl font-bold text-gray-900 mb-2">What's your business category?</h2>
-  //       <p className="text-gray-600">This helps customers find your business more easily</p>
-  //     </div>
-
-  //     <div className="grid grid-cols-2 gap-3">
-  //       {categories.map(category => (
-  //         <button
-  //           key={category}
-  //           onClick={() => handleInputChange('category', category)}
-  //           className={`p-4 text-left border rounded-lg transition-all ${formData.category === category
-  //             ? 'border-blue-500 bg-blue-50 text-blue-700'
-  //             : 'border-gray-300 hover:border-blue-300'
-  //             }`}
-  //         >
-  //           {category}
-  //         </button>
-  //       ))}
-  //     </div>
-  //   </div>
-  // );
-
-  // const renderStep4 = () => (
-  //   <div className="space-y-6">
-  //     <div className="text-center mb-8">
-  //       <MapPin className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-  //       <h2 className="text-3xl font-bold text-gray-900 mb-2">Add your address</h2>
-  //       <p className="text-gray-600">Provide your complete business address</p>
-  //     </div>
-
-  //     <div>
-  //       <label className="block text-sm font-medium text-gray-700 mb-2">Complete Address *</label>
-  //       <textarea
-  //         value={formData.address}
-  //         onChange={(e) => handleInputChange('address', e.target.value)}
-  //         placeholder="Enter your complete business address"
-  //         rows={4}
-  //         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-  //       />
-  //     </div>
-
-  //     <div className="bg-blue-50 p-4 rounded-lg">
-  //       <p className="text-blue-800 text-sm">
-  //         <strong>Selected:</strong> {formData.businessName} in {formData.area}, {formData.city}
-  //       </p>
-  //     </div>
-  //   </div>
-  // );
-
-  // const renderStep5 = () => (
-  //   <div className="space-y-6">
-  //     <div className="text-center mb-8">
-  //       <Phone className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-  //       <h2 className="text-3xl font-bold text-gray-900 mb-2">Contact information</h2>
-  //       <p className="text-gray-600">Help customers reach you easily</p>
-  //     </div>
-
-  //     <div>
-  //       <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
-  //       <input
-  //         type="tel"
-  //         value={formData.phone}
-  //         onChange={(e) => handleInputChange('phone', e.target.value)}
-  //         placeholder="+91 XXXXX XXXXX"
-  //         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-  //       />
-  //     </div>
-
-  //     <div>
-  //       <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-  //       <input
-  //         type="email"
-  //         value={formData.email}
-  //         onChange={(e) => handleInputChange('email', e.target.value)}
-  //         placeholder="business@example.com"
-  //         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-  //       />
-  //     </div>
-
-  //     <div>
-  //       <label className="block text-sm font-medium text-gray-700 mb-2">Business Hours</label>
-  //       <input
-  //         type="text"
-  //         value={formData.hours}
-  //         onChange={(e) => handleInputChange('hours', e.target.value)}
-  //         placeholder="Mon-Fri: 9 AM - 6 PM"
-  //         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-  //       />
-  //     </div>
-  //   </div>
-  // );
-
-  // const renderStep6 = () => (
-  //   <div className="space-y-6">
-  //     <div className="text-center mb-8">
-  //       <Camera className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-  //       <h2 className="text-3xl font-bold text-gray-900 mb-2">Final details</h2>
-  //       <p className="text-gray-600">Add a description to complete your listing</p>
-  //     </div>
-
-  //     <div>
-  //       <label className="block text-sm font-medium text-gray-700 mb-2">Business Description</label>
-  //       <textarea
-  //         value={formData.description}
-  //         onChange={(e) => handleInputChange('description', e.target.value)}
-  //         placeholder="Tell customers about your business, services, and what makes you special..."
-  //         rows={6}
-  //         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-  //       />
-  //     </div>
-
-  //     <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-  //       <h3 className="font-semibold text-green-800 mb-2">Review Your Listing</h3>
-  //       <div className="text-sm text-green-700 space-y-1">
-  //         <p><strong>Business:</strong> {formData.businessName}</p>
-  //         <p><strong>Location:</strong> {formData.area}, {formData.city}</p>
-  //         <p><strong>Category:</strong> {formData.category}</p>
-  //         <p><strong>Phone:</strong> {formData.phone}</p>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
-
+  const handleSkipStep = (field, value) => {
+    handleInputChange(field, value);
+    nextStep();
+  }
 
 
 
@@ -262,38 +127,42 @@ const BusinessListingForm = () => {
       case 1: return <ListingBusiName
         formData={formData}
         handleInputChange={handleInputChange}
-        cities={cities}
+        cities={dataObj.cityList}
         loading={loading}
         error={error} />;
-      case 2: return <ListingArea
+      case 2: return <ListingRoad
         formData={formData}
-        cityData={cityData}
+        loading={loading}
+        roadData={dataObj.roads}
+        handleInputChange={handleInputChange}
+        handleDataObj={handleDataObj}
+        error={error} />
+      case 3: return <ListingArea
+        formData={formData}
+        areas={dataObj.areas}
         loading={loading}
         handleInputChange={handleInputChange}
-        handleFormData={handleFormData}
+        handleDataObj={handleDataObj}
         error={error} />
-      case 3: return <ListingSubArea
-        subAreas={dataObj.area.subAreas}
+      case 4: return <ListingSubArea
+        subAreas={dataObj.subAreas}
         formData={formData}
         loading={loading}
         handleInputChange={handleInputChange}
         error={error}
+        handleSkipStep={handleSkipStep}
       />
-      // case 4: return renderStep4();
-      // case 5: return renderStep5();
-      // case 6: return renderStep6();
-      default: return renderStep1();
+      // case 4: return console.log("4 step form data", formData);
+      default: return 0;
     }
   };
 
   const isStepValid = () => {
     switch (currentStep) {
       case 1: return formData.businessName && formData.city;
-      case 2: return formData.area;
-      // case 3: return formData.category;
-      // case 4: return formData.address;
-      // case 5: return formData.phone;
-      // case 6: return true;
+      case 2: return formData.road;
+      case 3: return formData.area;
+      case 4: return true;
       default: return false;
     }
   };
@@ -302,7 +171,18 @@ const BusinessListingForm = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl p-8 ">
-          {renderProgressBar()}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-blue-600">Step {currentStep} of 6</span>
+              <span className="text-sm text-gray-500">{Math.round((currentStep / 6) * 100)}% Complete</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${(currentStep / 6) * 100}%` }}
+              ></div>
+            </div>
+          </div>
 
           <div className="min-h-[500px]">
             {renderCurrentStep()}
