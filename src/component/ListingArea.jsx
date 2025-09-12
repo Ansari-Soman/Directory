@@ -46,8 +46,8 @@ const ListingStep2 = ({ formData, areas, loading, handleInputChange, error, hand
                                 <button
                                     key={area.u_area_name}
                                     onClick={() => {
-                                        handleDataObj('subAreas', area.subAreas)
                                         handleInputChange('area', area.u_area_name)
+                                        handleDataObj('subAreas', area.subAreas)
                                     }}
                                     className={`p-4 text-left border rounded-lg transition-all ${formData.area === area.u_area_name
                                         ? 'border-blue-500 bg-blue-50 text-blue-700'

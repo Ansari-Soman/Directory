@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 const ListingRoad = ({ formData, roadData, loading, handleInputChange, handleDataObj, error }) => {
     const [searchRoad, setSearchRoad] = useState('');
-    console.log("in the road === ", roadData)
+    // console.log("in the road === ", roadData)
     const filteredRoads = roadData.filter(road =>
         road.u_road_name.toLowerCase().includes(searchRoad.toLowerCase())
     );
@@ -45,21 +45,30 @@ const ListingRoad = ({ formData, roadData, loading, handleInputChange, handleDat
                     <>
                         {/* Road Buttons - Scrollable Container */}
                         <div className="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto pr-2">
-                            {filteredRoads.map(road => (
-                                <button
-                                    key={road.u_road_name}
-                                    onClick={() => {
-                                        handleInputChange('road', road.u_road_name)
-                                        handleDataObj('areas', road.areas)
-                                    }}
-                                    className={`p-4 text-left border rounded-lg transition-all ${formData.road === road.u_road_name
-                                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                                        : 'border-gray-300 hover:border-blue-300'
-                                        }`}
-                                >
-                                    {road.u_road_name}
-                                </button>
-                            ))}
+                                {filteredRoads.map((road) => (
+                                    <label
+                                        key={road.u_road_name}
+                                        className={`p-4 block cursor-pointer text-left border rounded-lg transition-all ${formData.road === road.u_road_name
+                                            ? "border-blue-500 bg-blue-50 text-blue-700"
+                                            : "border-gray-300 hover:border-blue-300"
+                                            }`}
+                                    >
+                                        {/* Hidden Radio Input */}
+                                        <input
+                                            type="radio"
+                                            name="road"
+                                            value={road.u_road_name}
+                                            checked={formData.road === road.u_road_name}
+                                            onChange={(e) => {
+                                                handleInputChange("road", event.target.value);
+                                                handleDataObj("areas", road.areas);
+                                            }}
+                                            className="hidden"
+                                        />
+                                        {road.u_road_name}
+                                    </label>
+                                ))}
+
                         </div>
 
                         {/* Add New Road Button */}

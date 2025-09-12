@@ -1,7 +1,7 @@
 import { Building2 } from 'lucide-react'
 import React from 'react'
 
-const ListingStep1 = ({formData, handleInputChange, cities, loading, error}) => {
+const ListingStep1 = ({ formData, handleInputChange, cities, }) => {
   return (
       <div className="space-y-6">
           <div className="text-center mb-8">
@@ -26,11 +26,10 @@ const ListingStep1 = ({formData, handleInputChange, cities, loading, error}) => 
               <select
                   value={formData.city}
                   onChange={(e) => handleInputChange('city', e.target.value)}
-                  disabled={loading.cities}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
               >
                   <option value="">
-                      {loading.cities ? "Loading cities..." : "Select your city"}
+                      Select your city
                   </option>
                   {cities.map(city => (
                       <option key={city.uni_id} value={city.u_city_name}>
@@ -38,10 +37,6 @@ const ListingStep1 = ({formData, handleInputChange, cities, loading, error}) => 
                       </option>
                   ))}
               </select>
-
-              {error && (
-                  <p className="text-red-500 text-sm mt-1">{error}</p>
-              )}
           </div>
       </div>
   )

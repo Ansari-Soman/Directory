@@ -5,37 +5,38 @@ import ListingBusiName from './ListingBusiName';
 import ListingSubArea from './ListingSubArea';
 import ListingArea from './ListingArea'
 import ListingRoad from './ListingRoad';
-
+import AllListing from './AllListing'
 
 const BusinessListingForm = () => {
-  const [loading, setLoading] = useState({
-    cities: true,  // Start with true since we're loading on mount
-    areas: false,
-    subAreas: false,
-  });
-  const [error, setError] = useState(null);
-  const [cityData, setCityData] = useState(null)
+  const keys = ['roads', 'areas', 'subRoads', 'subAreas',]
+  const col = ['u_city_name', 'u_road_name', 'u_sub_road_name', 'u_area_name', 'u_sub_area_name_id']
 
   const [currentStep, setCurrentStep] = useState(1);
+
   const [dataObj, setDataObj] = useState({
     cityList: [],
     cityData: {},
-    roads: {},
+    roads: [],
+    areas: [],
+    subAreas: [],
+    roads: [],
+    subRoads: []
   })
 
 
   const [formData, setFormData] = useState({
     businessName: '',
     city: '',
-    area: '',
-    subArea: '',
+    Road: '',
+    SubRoad: '',
+    Area: '',
+    SubArea: '',
   });
 
   // Fetching City list
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        setLoading(prev => ({ ...prev, cities: true }));
         const res = await axios.get('http://localhost:8083/api/city/list', {
           headers: { "application": "dir" }
         });
@@ -44,7 +45,6 @@ const BusinessListingForm = () => {
         console.log(error);
         setError('Failed to load cities');
       } finally {
-        setLoading(prev => ({ ...prev, cities: false }));
       }
     };
 
@@ -57,20 +57,13 @@ const BusinessListingForm = () => {
     const fetchCityData = async () => {
       if (!formData.city) return;
       try {
-        setLoading(prev => ({ ...prev, areas: true }));
         const res = await axios.get(`http://localhost:8083/api/citydata/${formData.city}`, {
           headers: { "application": "dir" }
         });
-        setCityData(res.data.record[0] || { area: [] })
         handleDataObj('cityData', res.data.record[0])
-        console.log("")
       } catch (error) {
         console.log(error)
-        setCityData({ area: [] })
-      } finally {
-        setLoading(prev => ({ ...prev, areas: false }));
       }
-
     }
     fetchCityData()
   }, [formData.city])
@@ -85,26 +78,29 @@ const BusinessListingForm = () => {
     )))
   }
 
-  useEffect(() => {
-    if (!cityData) return;
-    handleDataObj('roads', cityData.roads)
-  }, [cityData])
-
-  useEffect(() => {
-    console.log("fooorrramm data === ", formData)
-  }, [formData])
-
-  // useEffect(() => {
-  //   console.log("data obj === ", dataObj)
-  // }, [dataObj])
-
-
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
+
+
+  useEffect(() => {
+    handleDataObj('roads', dataObj.cityData.roads)
+  }, [dataObj.cityData])
+
+
+
+
+  useEffect(() => {
+    // console.log("fooorrramm data === ", formData)
+    console.log("data === ", dataObj)
+  }, [formData])
+
+
+
+
 
   const nextStep = () => {
     if (currentStep < 6) setCurrentStep(currentStep + 1);
@@ -114,10 +110,10 @@ const BusinessListingForm = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
-  const handleSkipStep = (field, value) => {
-    handleInputChange(field, value);
-    nextStep();
-  }
+  // const handleSkipStep = (field, value) => {
+  //   handleInputChange(field, value);
+  //   nextStep();
+  // }
 
 
 
@@ -128,31 +124,40 @@ const BusinessListingForm = () => {
         formData={formData}
         handleInputChange={handleInputChange}
         cities={dataObj.cityList}
-        loading={loading}
-        error={error} />;
-      case 2: return <ListingRoad
-        formData={formData}
-        loading={loading}
-        roadData={dataObj.roads}
+      />;
+
+
+      case 2: return <AllListing
+        label={`Roads in ${formData.city}`}
+        addNew={'Road'}
+        data={dataObj.roads}
         handleInputChange={handleInputChange}
         handleDataObj={handleDataObj}
-        error={error} />
-      case 3: return <ListingArea
-        formData={formData}
-        areas={dataObj.areas}
-        loading={loading}
-        handleInputChange={handleInputChange}
-        handleDataObj={handleDataObj}
-        error={error} />
-      case 4: return <ListingSubArea
-        subAreas={dataObj.subAreas}
-        formData={formData}
-        loading={loading}
-        handleInputChange={handleInputChange}
-        error={error}
-        handleSkipStep={handleSkipStep}
+        columnName={'u_road_name'}
+        nextStep={['areas', 'subRoads']}
       />
-      // case 4: return console.log("4 step form data", formData);
+
+      case 3: return <AllListing
+        label={`Sub roads in ${formData.Road}`}
+        addNew={'SubRoad'}
+        data={dataObj.subRoads}
+        columnName={'u_sub_road_name'}
+        handleInputChange={handleInputChange}
+        handleDataObj={handleDataObj}
+        nextStep={['areas']}
+      />
+
+      case 4: return <AllListing
+        label={`Areas in ${formData.city}`}
+        addNew={'Area'}
+        data={dataObj.areas}
+        columnName={'u_area_name'}
+        handleDataObj={handleDataObj}
+        handleInputChange={handleInputChange}
+        nextStep={['subAreas']}
+      />
+
+
       default: return 0;
     }
   };
@@ -160,9 +165,10 @@ const BusinessListingForm = () => {
   const isStepValid = () => {
     switch (currentStep) {
       case 1: return formData.businessName && formData.city;
-      case 2: return formData.road;
-      case 3: return formData.area;
-      case 4: return true;
+      case 2: return formData.Road;
+      case 3: return formData.SubRoad;
+      case 4: return formData.Area;
+      case 5: return formData.SubArea
       default: return false;
     }
   };
