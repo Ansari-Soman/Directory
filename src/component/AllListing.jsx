@@ -1,7 +1,8 @@
 import { MapPin } from 'lucide-react';
 import React, { useState } from 'react'
 
-const ListingRoad = ({ data, handleInputChange, handleDataObj, label, addNew, columnName, nextStep }) => {
+const ListingRoad = ({ data, handleInputChange, handleDataObj, label, addNew, columnName, nextStep, formData }) => {
+    console.log("next step == >", nextStep)
     const [search, setSearch] = useState('');
     const [selected, setSelected] = useState(false)
     const filterRes = data.filter(item => {
@@ -26,7 +27,7 @@ const ListingRoad = ({ data, handleInputChange, handleDataObj, label, addNew, co
                 {/* Search Input */}
                 <input
                     type="text"
-                    placeholder="Search road..."
+                    placeholder="Search..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="w-full px-4 py-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -52,13 +53,22 @@ const ListingRoad = ({ data, handleInputChange, handleDataObj, label, addNew, co
                                 checked={selected === item[columnName]}
                                 onChange={(e) => {
                                     setSelected(item[columnName])
-                                    handleInputChange(addNew, e.target.value);
+                                    handleInputChange(formData, e.target.value);
+                                    if (nextStep) {
+                                        nextStep.length > 1 ? nextStep.map((next) => {
+                                            console.log(`in the next step  item === ${item}`)
+                                            handleDataObj(next, item[next])
+                                        }) :
+                                            handleDataObj(nextStep[0], item[nextStep[0]])
+                                    }
 
-                                    nextStep.length > 1 ? nextStep.map((next) => {
-                                        console.log(`in the next step  item === ${item}`)
-                                        handleDataObj(next, item[next])
-                                    }) :
-                                        handleDataObj(nextStep[0], item[nextStep[0]]);
+                                    // {
+                                    //     nextStep && nextStep.length > 1 ? nextStep.map((next) => {
+                                    //     console.log(`in the next step  item === ${item}`)
+                                    //     handleDataObj(next, item[next])
+                                    // }) :
+                                    //         handleDataObj(nextStep[0], item[nextStep[0]])
+                                    // }
                                 }}
                                 className="hidden"
                             />

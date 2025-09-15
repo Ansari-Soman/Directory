@@ -25,7 +25,11 @@ const ListingStep1 = ({ formData, handleInputChange, cities, }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
               <select
                   value={formData.city}
-                  onChange={(e) => handleInputChange('city', e.target.value)}
+                  onChange={(e) => {
+                      //   console.log("city === ", e)
+                      handleInputChange('city', e.target.value)
+                  }
+                  }
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
               >
                   <option value="">
