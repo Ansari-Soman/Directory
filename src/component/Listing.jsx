@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import axios from 'axios';
-import ListingBusiName from './ListingBusiName';
+import ListingBusiName from './ListingBusinessName';
 import AllListing from './AllListing'
 import SubmitBusiness from './SubmitBusiness';
 import { DirectoryContext } from '../Context';
@@ -15,6 +15,8 @@ const BusinessListingForm = () => {
   const { token, setListtingSuccess, navigate } = useContext(DirectoryContext)
   const [currentStep, setCurrentStep] = useState(1);
   const [isSkip, setIsSkip] = useState(false)
+  const [addNewWindow, setAddnNewWindow] = useState(false)
+  const [newDataAdded, setNewDataAdded] = useState(false)
 
   const [dataObj, setDataObj] = useState({
     cityList: [],
@@ -43,7 +45,8 @@ const BusinessListingForm = () => {
     categoryType: '',
     class: '',
     establishment: '',
-    time: ''
+    timeFrom: '',
+    timeTo: '',
   });
 
   const [dataId, setDataId] = useState({
@@ -58,8 +61,8 @@ const BusinessListingForm = () => {
     categoryType: '',
     class: '',
     establishment: '',
-    time: ''
-
+    timeFrom: '',
+    timeTo: '',
   });
 
   // Fetching City list, Category, Business Class and Establishment DATA
@@ -92,10 +95,10 @@ const BusinessListingForm = () => {
     axios.get(`http://localhost:8083/api/citydata/${formData.city}`, { headers: { "application": "dir" } })
       .then((res) => handleDataObj('cityData', res.data.record[0]))
       .catch((e) => console.log(e))
-
+    setNewDataAdded(false)
     const [city] = dataObj.cityList.filter((item) => item.u_city_name === formData.city)
     handleBusinessId('city', city.uni_id)
-  }, [formData.city])
+  }, [formData.city, newDataAdded])
 
 
   useEffect(() => {
@@ -111,6 +114,12 @@ const BusinessListingForm = () => {
     }
   }, [currentStep])
 
+
+  useEffect(() => {
+    console.log("formdata ===", formData)
+    console.log("dataId ===", dataId)
+
+  }, [formData])
 
   // Storing All Data
   const handleDataObj = (field, value) => {
@@ -139,6 +148,9 @@ const BusinessListingForm = () => {
   }
 
 
+  const handleOnNewWindow = () => {
+    setAddnNewWindow(!addNewWindow)
+  }
 
 
   const nextStep = () => {
@@ -150,9 +162,32 @@ const BusinessListingForm = () => {
   };
 
 
+  // __________-NEW_DATA-__________
+  const handleOnNewData = (value, type) => {
+    const newData = {
+      ...dataId,
+      name: value,
+      type: type,
+    }
+    console.log("newData === ", newData)
+    axios.post('http://localhost:8083/api/add/new', newData,
+      {
+        headers: {
+          "application": "dir",
+          authorization: "Bearer " + token
+        }
+      }
+    ).then((res) => {
+      if (res.data.message === "success") {
+        console.log("in the success")
+        setNewDataAdded(true);
+      }
+    })
+      .catch((e) => console.log(e))
+  }
 
 
-  // __________SUBMIT__________
+  // __________-SUBMIT-__________
   const handleOnSubmit = () => {
     console.log("ids === ", dataId)
     axios.post('http://localhost:8083/api/listing/business',
@@ -191,6 +226,9 @@ const BusinessListingForm = () => {
         handleInputChange={handleInputChange}
         handleDataObj={handleDataObj}
         handleBusinessId={handleBusinessId}
+        handleOnNewWindow={handleOnNewWindow}
+        handleOnNewData={handleOnNewData}
+        addNewWindow={addNewWindow}
         columnName={'u_road_name'}
         nextStep={['areas', 'subRoads']}
       />
@@ -206,6 +244,10 @@ const BusinessListingForm = () => {
             handleInputChange={handleInputChange}
             handleDataObj={handleDataObj}
             handleBusinessId={handleBusinessId}
+            handleOnNewWindow={handleOnNewWindow}
+            handleOnNewData={handleOnNewData}
+
+            addNewWindow={addNewWindow}
 
           />
         )
@@ -219,7 +261,10 @@ const BusinessListingForm = () => {
         handleDataObj={handleDataObj}
         handleInputChange={handleInputChange}
         handleBusinessId={handleBusinessId}
+        handleOnNewData={handleOnNewData}
 
+        handleOnNewWindow={handleOnNewWindow}
+        addNewWindow={addNewWindow}
         nextStep={['subAreas']}
       />
 
@@ -233,6 +278,10 @@ const BusinessListingForm = () => {
         handleDataObj={handleDataObj}
         handleInputChange={handleInputChange}
         handleBusinessId={handleBusinessId}
+        handleOnNewData={handleOnNewData}
+
+        handleOnNewWindow={handleOnNewWindow}
+        addNewWindow={addNewWindow}
 
       />
 
@@ -245,6 +294,8 @@ const BusinessListingForm = () => {
         handleDataObj={handleDataObj}
         handleInputChange={handleInputChange}
         handleBusinessId={handleBusinessId}
+        handleOnNewWindow={handleOnNewWindow}
+        addNewWindow={addNewWindow}
 
         nextStep={["subCategories"]}
 
@@ -258,6 +309,8 @@ const BusinessListingForm = () => {
         handleDataObj={handleDataObj}
         handleInputChange={handleInputChange}
         handleBusinessId={handleBusinessId}
+        handleOnNewWindow={handleOnNewWindow}
+        addNewWindow={addNewWindow}
 
         nextStep={["categoryTypes"]}
       />
@@ -268,9 +321,12 @@ const BusinessListingForm = () => {
         data={dataObj.categoryTypes}
         columnName={"u_category_type"}
         handleDataObj={handleDataObj}
+        handleOnNewWindow={handleOnNewWindow}
+        addNewWindow={addNewWindow}
 
         handleBusinessId={handleBusinessId}
         handleInputChange={handleInputChange}
+
       />
 
       case 9: return <AllListing
@@ -282,6 +338,8 @@ const BusinessListingForm = () => {
         handleDataObj={handleDataObj}
         handleInputChange={handleInputChange}
         handleBusinessId={handleBusinessId}
+        handleOnNewWindow={handleOnNewWindow}
+        addNewWindow={addNewWindow}
 
 
       />
@@ -294,7 +352,8 @@ const BusinessListingForm = () => {
         columnName={'u_business_establishment'}
         handleDataObj={handleDataObj}
         handleBusinessId={handleBusinessId}
-
+        handleOnNewWindow={handleOnNewWindow}
+        addNewWindow={addNewWindow}
         handleInputChange={handleInputChange}
       />
 
@@ -305,7 +364,7 @@ const BusinessListingForm = () => {
 
   const isStepValid = () => {
     switch (currentStep) {
-      case 1: return formData.businessName && formData.city && dataObj.cityData && formData.time;
+      case 1: return formData.businessName && formData.city && dataObj.cityData && formData.timeFrom && formData.timeTo;
       case 2: return formData.road;
       case 3: return formData.subRoad;
       case 4: return formData.area;
@@ -319,88 +378,92 @@ const BusinessListingForm = () => {
     }
   };
   return (
+    <>
+      {
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-xl p-8 ">
+              <div className="mb-8">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-blue-600">Step {currentStep} of 11</span>
+                  <span className="text-sm text-gray-500">{Math.round((currentStep / 11) * 100)}% Complete</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out"
+                    style={{ width: `${(currentStep / 11) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
 
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl p-8 ">
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-blue-600">Step {currentStep} of 11</span>
-              <span className="text-sm text-gray-500">{Math.round((currentStep / 11) * 100)}% Complete</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out"
-                style={{ width: `${(currentStep / 11) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-
-          <div className="min-h-[500px]">
-            {renderCurrentStep()}
-          </div>
+              <div className="min-h-[500px]">
+                {renderCurrentStep()}
+              </div>
 
 
-          <div className='flex justify-end mr-1'>
-            {/* __________SKIP-BUTTON__________ */}
-            {isSkip &&
-              <button
-                onClick={nextStep}
-                className='flex items-center px-6 py-3 rounded-lg font-medium transition-all   text-blue-600 textwhite hover-blue-700 cursor-pointer'
-              >
-                Skip
-                <ChevronRight className="w-5 h-5 ml-2" />
-              </button>
-            }
-          </div>
-
-          <div className="flex justify-between mt-8 pt-6 border-t border-gray-200 ">
-            {/* __________PREVIOUS-BUTTON__________ */}
-            <button
-              onClick={prevStep}
-              disabled={currentStep === 1}
-              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all ${currentStep === 1
-                ? 'text-gray-400 cursor-not-allowed'
-                : 'text-gray-700 hover:bg-gray-100'
-                }`}
-            >
-              <ChevronLeft className="w-5 h-5 mr-2" />
-              Previous
-            </button>
-
-            {/* __________SUBMIT-BUTTON__________ */}
-            {currentStep === 11 ? (
-              <button
-                className="flex items-center px-8 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all"
-                onClick={() => {
-
-                  handleOnSubmit()
+              <div className='flex justify-end mr-1'>
+                {/* __________SKIP-BUTTON__________ */}
+                {isSkip &&
+                  <button
+                    onClick={nextStep}
+                    className='flex items-center px-6 py-3 rounded-lg font-medium transition-all   text-blue-600 textwhite hover-blue-700 cursor-pointer'
+                  >
+                    Skip
+                    <ChevronRight className="w-5 h-5 ml-2" />
+                  </button>
                 }
-                }
-              >
-                Submit Listing
-              </button>
-            ) : (
-              <button
-                onClick={nextStep}
-                disabled={!isStepValid()}
-                className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all ${isStepValid()
-                  ? 'bg-blue-600 text-white hover:bg-blue-700'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
-              >
-                Next
-                <ChevronRight className="w-5 h-5 ml-2" />
-              </button>
-            )}
+              </div>
+
+              <div className="flex justify-between mt-8 pt-6 border-t border-gray-200 ">
+                {/* __________PREVIOUS-BUTTON__________ */}
+                <button
+                  onClick={prevStep}
+                  disabled={currentStep === 1}
+                  className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all ${currentStep === 1
+                    ? 'text-gray-400 cursor-not-allowed'
+                    : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                >
+                  <ChevronLeft className="w-5 h-5 mr-2" />
+                  Previous
+                </button>
+
+                {/* __________SUBMIT-BUTTON__________ */}
+                {currentStep === 11 ? (
+                  <button
+                    className="flex items-center px-8 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all"
+                    onClick={() => {
+
+                      handleOnSubmit()
+                    }
+                    }
+                  >
+                    Submit Listing
+                  </button>
+                ) : (
+                  <button
+                    onClick={nextStep}
+                    disabled={!isStepValid()}
+                    className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all ${isStepValid()
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      }`}
+                  >
+                    Next
+                    <ChevronRight className="w-5 h-5 ml-2" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="text-center mt-6 text-gray-600">
+              <p className="text-sm">Need help? Contact our support team</p>
+            </div>
           </div>
         </div>
+      }
+    </>
 
-        <div className="text-center mt-6 text-gray-600">
-          <p className="text-sm">Need help? Contact our support team</p>
-        </div>
-      </div>
-    </div>
   );
 };
 

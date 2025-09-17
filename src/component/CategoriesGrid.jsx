@@ -6,7 +6,6 @@ import { gridCategoryData } from "./data";
 
 // Props-based reusable grid
 const CategoriesGrid = () => {
-    const {setSelectedCategory} = useContext(DirectoryContext)
     return (
         <div className="w-full  py-10 bg-gray-100">
             <div className="container mx-auto px-4">

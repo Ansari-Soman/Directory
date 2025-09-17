@@ -9,7 +9,6 @@ const options = cities.map((city) => ({
 }));
 
 function LocationSearch() {
-    const { selectedCity, setSelectedCity } = useContext(DirectoryContext)
     
     return (
         <div style={{ width: "250px" }}>
@@ -17,8 +16,6 @@ function LocationSearch() {
                 options={options}
                 placeholder="Search location..."
                 isSearchable
-                value={options.find(opt => opt.value === selectedCity) || null}
-                onChange={(e) => setSelectedCity(e.value)}
             />
         </div>
     );

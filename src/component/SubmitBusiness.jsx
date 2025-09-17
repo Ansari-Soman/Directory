@@ -13,7 +13,10 @@ const SubmitBusiness = ({ formData }) => {
         { label: "Category Type", value: formData.categoryType },
         { label: "Business Class", value: formData.class },
         { label: "Establishment", value: formData.establishment },
-        { label: "Time", value: formData.time }
+        {
+            label: "Timing",
+            value: `${formData.timeFrom} - ${formData.timeTo}`
+        }
     ];
 
     return (
