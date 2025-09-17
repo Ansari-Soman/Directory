@@ -1,8 +1,7 @@
-import { MapPin } from 'lucide-react';
+import { Building2, MapPin } from 'lucide-react';
 import React, { useState } from 'react'
 
-const ListingRoad = ({ data, handleInputChange, handleDataObj, label, addNew, columnName, nextStep, formData }) => {
-    console.log("next step == >", nextStep)
+const ListingRoad = ({ data, handleInputChange, handleDataObj, label, addNew, columnName, nextStep, formData, handleBusinessId }) => {
     const [search, setSearch] = useState('');
     const [selected, setSelected] = useState(false)
     const filterRes = data.filter(item => {
@@ -13,7 +12,7 @@ const ListingRoad = ({ data, handleInputChange, handleDataObj, label, addNew, co
     return (
         <div className="space-y-6">
             <div className="text-center mb-8">
-                <MapPin className="w-16 h-16 text-blue-600 mx-auto mb-4" />
+                <Building2 className="w-16 h-16 text-blue-600 mx-auto mb-4" />
                 <div className="mb-4">
                     <h2 className="text-3xl font-bold text-gray-900">Choose your {addNew}</h2>
                 </div>
@@ -35,8 +34,8 @@ const ListingRoad = ({ data, handleInputChange, handleDataObj, label, addNew, co
 
 
                 {/* Road Buttons - Scrollable Container */}
-                <div className="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto pr-2">
-                    {filterRes.map((item) => (
+                <div className="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto pr-2 ">
+                    {filterRes.length > 0 ? filterRes.map((item) => (
                         <label
                             key={item[columnName]}
                             className={`p-4 block cursor-pointer text-left border rounded-lg transition-all ${selected === item[columnName]
@@ -54,27 +53,19 @@ const ListingRoad = ({ data, handleInputChange, handleDataObj, label, addNew, co
                                 onChange={(e) => {
                                     setSelected(item[columnName])
                                     handleInputChange(formData, e.target.value);
+                                    handleBusinessId(formData, item.uni_id)
                                     if (nextStep) {
                                         nextStep.length > 1 ? nextStep.map((next) => {
-                                            console.log(`in the next step  item === ${item}`)
                                             handleDataObj(next, item[next])
                                         }) :
                                             handleDataObj(nextStep[0], item[nextStep[0]])
                                     }
-
-                                    // {
-                                    //     nextStep && nextStep.length > 1 ? nextStep.map((next) => {
-                                    //     console.log(`in the next step  item === ${item}`)
-                                    //     handleDataObj(next, item[next])
-                                    // }) :
-                                    //         handleDataObj(nextStep[0], item[nextStep[0]])
-                                    // }
                                 }}
                                 className="hidden"
                             />
                             {item[columnName]}
                         </label>
-                    ))}
+                    )) : <p>{search} Not Found</p>}
 
                 </div>
 

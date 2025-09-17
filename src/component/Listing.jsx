@@ -1,26 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { ChevronRight, ChevronLeft, MapPin, Building2, Phone, Mail, Clock, Camera, Kanban, Badge, Award, Star, Shield, Tag, Medal } from 'lucide-react';
+import React, { useContext, useEffect, useState } from 'react';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
 import axios from 'axios';
 import ListingBusiName from './ListingBusiName';
-import ListingSubArea from './ListingSubArea';
-import ListingArea from './ListingArea'
-import ListingRoad from './ListingRoad';
 import AllListing from './AllListing'
-import BusinessDataDisplay from './SubmitBusiness';
 import SubmitBusiness from './SubmitBusiness';
+import { DirectoryContext } from '../Context';
+import SuccessPage from './ListingMessage';
 
 const BusinessListingForm = () => {
-  const keys = ['roads', 'areas', 'subRoads', 'subAreas', "subCategories", "categoryTypes",]
 
-  const col = ['u_city_name', 'u_road_name', 'u_sub_road_name', 'u_area_name', 'u_sub_area_name_id', "u_business_category", "u_business_sub_category", "u_category_type", "u_business_class", "u_business_establishment"]
+  // const keys = ['roads', 'areas', 'subRoads', 'subAreas', "subCategories", "categoryTypes",]
+  // const col = ['u_city_name', 'u_road_name', 'u_sub_road_name', 'u_area_name', 'u_sub_area_name_id', "u_business_category", "u_business_sub_category", "u_category_type", "u_business_class", "u_business_establishment"]
 
+  const { token, setListtingSuccess, navigate } = useContext(DirectoryContext)
   const [currentStep, setCurrentStep] = useState(1);
   const [isSkip, setIsSkip] = useState(false)
-  const [selectedCity, setSelectedCity] = useState(false)
 
   const [dataObj, setDataObj] = useState({
     cityList: [],
-    cityData: {},
+    cityData: '',
     roads: [],
     areas: [],
     subAreas: [],
@@ -45,9 +43,26 @@ const BusinessListingForm = () => {
     categoryType: '',
     class: '',
     establishment: '',
+    time: ''
   });
 
-  // Fetching City list
+  const [dataId, setDataId] = useState({
+    businessName: '',
+    city: '',
+    road: '',
+    subRoad: '',
+    area: '',
+    subArea: '',
+    category: '',
+    subCategory: '',
+    categoryType: '',
+    class: '',
+    establishment: '',
+    time: ''
+
+  });
+
+  // Fetching City list, Category, Business Class and Establishment DATA
   useEffect(() => {
     axios.get('http://localhost:8083/api/city/list', { headers: { "application": "dir" } }).
       then((res) => handleDataObj("cityList", res.data.record)).
@@ -67,40 +82,37 @@ const BusinessListingForm = () => {
       .then((res) => handleDataObj("establishment", res.data.record))
       .catch((e) => console.log(e))
 
-    // const fetchCities = async () => {
-    //   try {
-    //     const res = await axios.get('http://localhost:8083/api/city/list', {
-    //       headers: { "application": "dir" }
-    //     });
-    //     handleDataObj("cityList", res.data.record);
-    //   } catch (error) {
-    //     console.log(error);
-    //   } 
-    // };
 
-    // fetchCities();
   }, []);
 
 
   // Fethcing City Data
   useEffect(() => {
-    const fetchCityData = async () => {
-      if (!formData.city) return;
-      try {
-        const res = await axios.get(`http://localhost:8083/api/citydata/${formData.city}`, {
-          headers: { "application": "dir" }
-        });
-        handleDataObj('cityData', res.data.record[0])
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    fetchCityData()
+    if (!formData.city) return;
+    axios.get(`http://localhost:8083/api/citydata/${formData.city}`, { headers: { "application": "dir" } })
+      .then((res) => handleDataObj('cityData', res.data.record[0]))
+      .catch((e) => console.log(e))
+
+    const [city] = dataObj.cityList.filter((item) => item.u_city_name === formData.city)
+    handleBusinessId('city', city.uni_id)
   }, [formData.city])
 
 
+  useEffect(() => {
+    handleDataObj('roads', dataObj.cityData.roads)
+  }, [dataObj.cityData])
 
 
+  useEffect(() => {
+    if (currentStep === 3 || currentStep === 5 || currentStep === 8) {
+      setIsSkip(true)
+    } else {
+      setIsSkip(false)
+    }
+  }, [currentStep])
+
+
+  // Storing All Data
   const handleDataObj = (field, value) => {
     setDataObj((prev => (
       {
@@ -110,60 +122,64 @@ const BusinessListingForm = () => {
     )))
   }
 
+  // Storing Listing Data
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+
   };
 
-
-  useEffect(() => {
-    handleDataObj('roads', dataObj.cityData.roads)
-  }, [dataObj.cityData])
-
-
-
-
-  useEffect(() => {
-    if(!selectedCity) return;
-    const [city] = dataObj.cityList.filter((item) => item.u_city_name === selectedCity)
-    // console.log("ser === ", city.uni_id)
-    handleInputChange('city', city.uni_id)
-    // console.log("City id === ", cityID)
-    // console.log("fooorrramm data === ", formData)
-    // console.log("data === ", dataObj)
-  }, [selectedCity])
-
+  const handleBusinessId = (field, value) => {
+    setDataId(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
 
 
 
 
   const nextStep = () => {
     if (currentStep < 11) setCurrentStep(currentStep + 1);
-    // if (currentStep === 2) setIsSkip(true)
   };
 
   const prevStep = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
-  // const handleSkipStep = (field, value) => {
-  //   handleInputChange(field, value);
-  //   nextStep();
-  // }
 
 
+
+  // __________SUBMIT__________
+  const handleOnSubmit = () => {
+    console.log("ids === ", dataId)
+    axios.post('http://localhost:8083/api/listing/business',
+      dataId,
+      {
+        headers: {
+          "application": "dir",
+          authorization: "Bearer " + token
+        }
+      }).
+      then((res) => {
+        console.log("SuccessFull", res)
+        setListtingSuccess(true)
+        navigate('/listing/success')
+      })
+      .catch((e) => console.log("faild", e))
+  }
 
 
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1: return <ListingBusiName
+        handleBusinessId={handleBusinessId}
         formData={formData}
         handleInputChange={handleInputChange}
-        setSelectedCity={setSelectedCity}
         cities={dataObj.cityList}
-        selectedCity={selectedCity}
+
       />;
 
 
@@ -174,22 +190,25 @@ const BusinessListingForm = () => {
         data={dataObj.roads}
         handleInputChange={handleInputChange}
         handleDataObj={handleDataObj}
+        handleBusinessId={handleBusinessId}
         columnName={'u_road_name'}
         nextStep={['areas', 'subRoads']}
       />
 
-      case 3: 
-      return (  
-        <AllListing
-        label={`Sub roads in ${formData.road}`}
-        addNew={'Sub Road'}
-        formData={'subRoad'}
-        data={dataObj.subRoads}
-        columnName={'u_sub_road_name'}
-        handleInputChange={handleInputChange}
-        handleDataObj={handleDataObj}
-        />
-      ) 
+      case 3:
+        return (
+          <AllListing
+            label={`Sub roads in ${formData.road}`}
+            addNew={'Sub Road'}
+            formData={'subRoad'}
+            data={dataObj.subRoads}
+            columnName={'u_sub_road_name'}
+            handleInputChange={handleInputChange}
+            handleDataObj={handleDataObj}
+            handleBusinessId={handleBusinessId}
+
+          />
+        )
 
       case 4: return <AllListing
         label={`Areas in ${formData.city}`}
@@ -199,6 +218,8 @@ const BusinessListingForm = () => {
         columnName={'u_area_name'}
         handleDataObj={handleDataObj}
         handleInputChange={handleInputChange}
+        handleBusinessId={handleBusinessId}
+
         nextStep={['subAreas']}
       />
 
@@ -211,6 +232,8 @@ const BusinessListingForm = () => {
         columnName={'u_sub_area_name_id'}
         handleDataObj={handleDataObj}
         handleInputChange={handleInputChange}
+        handleBusinessId={handleBusinessId}
+
       />
 
       case 6: return <AllListing
@@ -221,6 +244,8 @@ const BusinessListingForm = () => {
         columnName={"u_business_category"}
         handleDataObj={handleDataObj}
         handleInputChange={handleInputChange}
+        handleBusinessId={handleBusinessId}
+
         nextStep={["subCategories"]}
 
       />
@@ -232,6 +257,8 @@ const BusinessListingForm = () => {
         columnName={"u_business_sub_category"}
         handleDataObj={handleDataObj}
         handleInputChange={handleInputChange}
+        handleBusinessId={handleBusinessId}
+
         nextStep={["categoryTypes"]}
       />
       case 8: return <AllListing
@@ -241,6 +268,8 @@ const BusinessListingForm = () => {
         data={dataObj.categoryTypes}
         columnName={"u_category_type"}
         handleDataObj={handleDataObj}
+
+        handleBusinessId={handleBusinessId}
         handleInputChange={handleInputChange}
       />
 
@@ -252,6 +281,8 @@ const BusinessListingForm = () => {
         columnName={"u_business_class"}
         handleDataObj={handleDataObj}
         handleInputChange={handleInputChange}
+        handleBusinessId={handleBusinessId}
+
 
       />
 
@@ -262,35 +293,33 @@ const BusinessListingForm = () => {
         data={dataObj.establishment}
         columnName={'u_business_establishment'}
         handleDataObj={handleDataObj}
+        handleBusinessId={handleBusinessId}
+
         handleInputChange={handleInputChange}
       />
 
-      case 11:return <SubmitBusiness formData={formData} />
+      case 11: return <SubmitBusiness formData={formData} />
       default: return 0;
     }
   };
 
   const isStepValid = () => {
     switch (currentStep) {
-      case 1: return formData.businessName && formData.city && dataObj.cityData;
+      case 1: return formData.businessName && formData.city && dataObj.cityData && formData.time;
       case 2: return formData.road;
-      // case 3: return formData.subRoad;
-      case 3: return true;
+      case 3: return formData.subRoad;
       case 4: return formData.area;
-      // case 5: return formData.subArea;
-      case 5: return true;
+      case 5: return formData.subArea;
       case 6: return formData.category;
       case 7: return formData.subCategory;
-      // case 8: return formData.categoryType;
-      case 8: return true;
+      case 8: return formData.categoryType;
       case 9: return formData.class;
       case 10: return formData.establishment;
-
       default: return false;
     }
   };
   return (
-    
+
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl p-8 ">
@@ -310,20 +339,23 @@ const BusinessListingForm = () => {
           <div className="min-h-[500px]">
             {renderCurrentStep()}
           </div>
-          <div className='flex justify-end'>
+
+
+          <div className='flex justify-end mr-1'>
+            {/* __________SKIP-BUTTON__________ */}
             {isSkip &&
               <button
                 onClick={nextStep}
-                className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all 
-              text-blue-600 textwhite hover-blue-700 cursor-pointer
-              `}
+                className='flex items-center px-6 py-3 rounded-lg font-medium transition-all   text-blue-600 textwhite hover-blue-700 cursor-pointer'
               >
                 Skip
                 <ChevronRight className="w-5 h-5 ml-2" />
               </button>
             }
           </div>
+
           <div className="flex justify-between mt-8 pt-6 border-t border-gray-200 ">
+            {/* __________PREVIOUS-BUTTON__________ */}
             <button
               onClick={prevStep}
               disabled={currentStep === 1}
@@ -336,10 +368,15 @@ const BusinessListingForm = () => {
               Previous
             </button>
 
+            {/* __________SUBMIT-BUTTON__________ */}
             {currentStep === 11 ? (
               <button
                 className="flex items-center px-8 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all"
-                onClick={() => console.log("formdata === ", formData)}
+                onClick={() => {
+
+                  handleOnSubmit()
+                }
+                }
               >
                 Submit Listing
               </button>

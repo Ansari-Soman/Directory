@@ -1,8 +1,11 @@
 import { Building2 } from 'lucide-react'
-import React from 'react'
+import React, { useContext } from 'react'
+import { DirectoryContext } from '../Context'
 
-const ListingStep1 = ({ formData, handleInputChange, cities, }) => {
+const ListingStep1 = ({ formData, handleInputChange, cities, handleBusinessId }) => {
+    const { listingSuccess } = useContext(DirectoryContext)
   return (
+      <>
       <div className="space-y-6">
           <div className="text-center mb-8">
               <Building2 className="w-16 h-16 text-blue-600 mx-auto mb-4" />
@@ -15,11 +18,29 @@ const ListingStep1 = ({ formData, handleInputChange, cities, }) => {
               <input
                   type="text"
                   value={formData.businessName}
-                  onChange={(e) => handleInputChange('businessName', e.target.value)}
+                          onChange={(e) => {
+                              handleInputChange('businessName', e.target.value)
+                              handleBusinessId('businessName', e.target.value)
+                          }
+                          } 
                   placeholder="Enter your business name"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
           </div>
+                  <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Business Time</label>
+                      <input
+                          type="time"
+                          value={formData.time}
+                          onChange={(e) => {
+                              handleBusinessId('time', e.target.value)
+                              handleInputChange('time', e.target.value)
+                          }
+                          }
+                          placeholder="Enter your business time"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                  </div>
 
           <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
@@ -43,6 +64,9 @@ const ListingStep1 = ({ formData, handleInputChange, cities, }) => {
               </select>
           </div>
       </div>
+          
+      </>
+
   )
 }
 

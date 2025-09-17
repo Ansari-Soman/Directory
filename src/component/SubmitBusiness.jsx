@@ -3,6 +3,7 @@ import React from "react";
 const SubmitBusiness = ({ formData }) => {
     const fields = [
         { label: "Name", value: formData.businessName },
+        { label: "City", value: formData.city },
         { label: "Road", value: formData.road },
         { label: "Sub Road", value: formData.subRoad },
         { label: "Area", value: formData.area },
@@ -12,6 +13,7 @@ const SubmitBusiness = ({ formData }) => {
         { label: "Category Type", value: formData.categoryType },
         { label: "Business Class", value: formData.class },
         { label: "Establishment", value: formData.establishment },
+        { label: "Time", value: formData.time }
     ];
 
     return (

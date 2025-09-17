@@ -1,35 +1,15 @@
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
-import Header from "./component/Header"
 import CategoriesGrid from "./component/CategoriesGrid"
-import  Search  from "./component/Search"
-import {  DirectoryContext } from "./Context"
-import Test from "./component/Test"
-import BusinessList from "./component/BusinessList"
-import FilterPage from "./component/FilterPage"
-import Result from "./component/Result"
-import { useContext, useEffect } from "react"
-import { businesses } from "./component/data"
-import Listing from "./component/Listing"
+import Search from "./component/Search"
+import Listing from './component/Listing'
+import WebWrapper from "./Wrappers/WebWrapper"
+import ListingMessage from "./component/ListingMessage"
 
 
 const MainComponent = () => {
-    const { filterActive } = useContext(DirectoryContext)
-
-
-    const Layout = () => {
-        return (
-            <>
-                <Header />
-                <Outlet /> 
-                {filterActive && <FilterPage />}
-            </>
-        );
-    };
-
-
     const routers = createBrowserRouter([
         {
-            element: <Layout />,
+            element: <WebWrapper />,
             children: [
                 {
                     path: "/", 
@@ -41,41 +21,14 @@ const MainComponent = () => {
                     ),
                 },
                 {
-                    path: "/listing",
+                    path: '/listing',
                     element: <Listing />
-                },
+                }, 
                 {
-                    path: "/result",
-                    element: <Result />
-                },
-                {
-                    path: "/shops",
-                    element: <BusinessList />,
-                },
-                {
-                    path: "/housing",
-                    element: <BusinessList />
-                },
-                {
-                    path: "/restaurant",
-                    element: <BusinessList />
-                },
-                {
-                    path: "/hospital",
-                    element: <BusinessList />
-                },
-                {
-                    path: "/school",
-                    element: <BusinessList />
-                },
-                {
-                    path: "/sports",
-                    element: <BusinessList />
-                },
-                {
-                    path: "/events",
-                    element: <BusinessList />
-                },
+                    path: "/listing/success",
+                    element: <ListingMessage />
+                }
+
             ],
         },
     ]);
