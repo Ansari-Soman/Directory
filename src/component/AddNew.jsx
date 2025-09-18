@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { X } from 'lucide-react';
+import { DirectoryContext } from '../Context';
 
-const AddNew = ({ isOpen = true, label, handleOnNewWindow, handleOnNewData }) => {
-    if (!isOpen) return null;
-
+const AddNew = ({ label }) => {
+    const { handleOnNewWindow, handleOnNewData } = useContext(DirectoryContext)
     const [newData, setNewData] = useState('')
     return (
         <div

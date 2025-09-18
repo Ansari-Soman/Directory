@@ -3,8 +3,8 @@ import React, { useContext } from 'react'
 import { DirectoryContext } from '../Context'
 import Select from 'react-select'
 
-const ListingBusinessName = ({ formData, handleInputChange, cities, handleBusinessId }) => {
-    const { listingSuccess } = useContext(DirectoryContext)
+const ListingBusinessName = ({ cities }) => {
+    const { handleInputChange, formData, handleBusinessId } = useContext(DirectoryContext)
     const options = cities.map((city) => (
         {
             value: city.u_city_name,

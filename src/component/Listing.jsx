@@ -6,64 +6,12 @@ import AllListing from './AllListing'
 import SubmitBusiness from './SubmitBusiness';
 import { DirectoryContext } from '../Context';
 import SuccessPage from './ListingMessage';
+import { data } from 'react-router-dom';
 
 const BusinessListingForm = () => {
-
-  // const keys = ['roads', 'areas', 'subRoads', 'subAreas', "subCategories", "categoryTypes",]
-  // const col = ['u_city_name', 'u_road_name', 'u_sub_road_name', 'u_area_name', 'u_sub_area_name_id', "u_business_category", "u_business_sub_category", "u_category_type", "u_business_class", "u_business_establishment"]
-
-  const { token, setListtingSuccess, navigate } = useContext(DirectoryContext)
+  const { token, setListtingSuccess, navigate, formData, dataObj, handleDataObj, handleBusinessId, dataId, newDataAdded } = useContext(DirectoryContext)
   const [currentStep, setCurrentStep] = useState(1);
   const [isSkip, setIsSkip] = useState(false)
-  const [addNewWindow, setAddnNewWindow] = useState(false)
-  const [newDataAdded, setNewDataAdded] = useState(false)
-
-  const [dataObj, setDataObj] = useState({
-    cityList: [],
-    cityData: '',
-    roads: [],
-    areas: [],
-    subAreas: [],
-    subRoads: [],
-    category: [],
-    subCategories: [],
-    categoryTypes: [],
-    class: [],
-    establishment: [],
-  })
-
-
-  const [formData, setFormData] = useState({
-    businessName: '',
-    city: '',
-    road: '',
-    subRoad: '',
-    area: '',
-    subArea: '',
-    category: '',
-    subCategory: '',
-    categoryType: '',
-    class: '',
-    establishment: '',
-    timeFrom: '',
-    timeTo: '',
-  });
-
-  const [dataId, setDataId] = useState({
-    businessName: '',
-    city: '',
-    road: '',
-    subRoad: '',
-    area: '',
-    subArea: '',
-    category: '',
-    subCategory: '',
-    categoryType: '',
-    class: '',
-    establishment: '',
-    timeFrom: '',
-    timeTo: '',
-  });
 
   // Fetching City list, Category, Business Class and Establishment DATA
   useEffect(() => {
@@ -71,11 +19,9 @@ const BusinessListingForm = () => {
       then((res) => handleDataObj("cityList", res.data.record)).
       catch((e) => console.log(e))
 
-
     axios.get('http://localhost:8083/api/business/category', { headers: { "application": "dir" } }).
       then((res) => handleDataObj('category', res.data.record))
       .catch((e) => console.log("error"))
-
 
     axios.get('http://localhost:8083/api/class/list', { headers: { "application": "dir" } })
       .then((res) => handleDataObj("class", res.data.record))
@@ -84,8 +30,6 @@ const BusinessListingForm = () => {
     axios.get('http://localhost:8083/api/establishment/list', { headers: { "application": "dir" } })
       .then((res) => handleDataObj("establishment", res.data.record))
       .catch((e) => console.log(e))
-
-
   }, []);
 
 
@@ -95,17 +39,36 @@ const BusinessListingForm = () => {
     axios.get(`http://localhost:8083/api/citydata/${formData.city}`, { headers: { "application": "dir" } })
       .then((res) => handleDataObj('cityData', res.data.record[0]))
       .catch((e) => console.log(e))
-    setNewDataAdded(false)
     const [city] = dataObj.cityList.filter((item) => item.u_city_name === formData.city)
     handleBusinessId('city', city.uni_id)
   }, [formData.city, newDataAdded])
 
-
+  // Fetching Road
   useEffect(() => {
+    if (!dataObj.cityData) return;
     handleDataObj('roads', dataObj.cityData.roads)
   }, [dataObj.cityData])
 
+  // Fetching Area and SUb Road
+  useEffect(() => {
+    if (!formData.road) return;
+    const [selectedRoad] = dataObj.cityData.roads.filter((road) => road.u_road_name === formData.road);
+    handleDataObj('subRoads', selectedRoad.subRoads)
+    handleDataObj('areas', selectedRoad.areas)
+  }, [formData.road, dataObj.cityData])
 
+  // Fetching Sub Area
+  useEffect(() => {
+    if (!formData.area) return;
+    const [selectedArea] = dataObj.areas.filter((area) => area.u_area_name === formData.area)
+    handleDataObj('subAreas', selectedArea.subAreas)
+    console.log("slected area", selectedArea)
+    console.log("dataObj.areas", dataObj.areas)
+  }, [formData.area, dataObj.areas])
+
+
+
+  // Setup For SKIP button
   useEffect(() => {
     if (currentStep === 3 || currentStep === 5 || currentStep === 8) {
       setIsSkip(true)
@@ -113,44 +76,6 @@ const BusinessListingForm = () => {
       setIsSkip(false)
     }
   }, [currentStep])
-
-
-  useEffect(() => {
-    console.log("formdata ===", formData)
-    console.log("dataId ===", dataId)
-
-  }, [formData])
-
-  // Storing All Data
-  const handleDataObj = (field, value) => {
-    setDataObj((prev => (
-      {
-        ...prev,
-        [field]: value
-      }
-    )))
-  }
-
-  // Storing Listing Data
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-
-  };
-
-  const handleBusinessId = (field, value) => {
-    setDataId(prev => ({
-      ...prev,
-      [field]: value
-    }))
-  }
-
-
-  const handleOnNewWindow = () => {
-    setAddnNewWindow(!addNewWindow)
-  }
 
 
   const nextStep = () => {
@@ -162,34 +87,11 @@ const BusinessListingForm = () => {
   };
 
 
-  // __________-NEW_DATA-__________
-  const handleOnNewData = (value, type) => {
-    const newData = {
-      ...dataId,
-      name: value,
-      type: type,
-    }
-    console.log("newData === ", newData)
-    axios.post('http://localhost:8083/api/add/new', newData,
-      {
-        headers: {
-          "application": "dir",
-          authorization: "Bearer " + token
-        }
-      }
-    ).then((res) => {
-      if (res.data.message === "success") {
-        console.log("in the success")
-        setNewDataAdded(true);
-      }
-    })
-      .catch((e) => console.log(e))
-  }
+
 
 
   // __________-SUBMIT-__________
   const handleOnSubmit = () => {
-    console.log("ids === ", dataId)
     axios.post('http://localhost:8083/api/listing/business',
       dataId,
       {
@@ -210,151 +112,87 @@ const BusinessListingForm = () => {
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1: return <ListingBusiName
-        handleBusinessId={handleBusinessId}
-        formData={formData}
-        handleInputChange={handleInputChange}
         cities={dataObj.cityList}
-
       />;
 
 
       case 2: return <AllListing
         label={`Roads in ${formData.city}`}
         addNew={'Road'}
-        formData={'road'}
+        fieldName={'road'}
         data={dataObj.roads}
-        handleInputChange={handleInputChange}
-        handleDataObj={handleDataObj}
-        handleBusinessId={handleBusinessId}
-        handleOnNewWindow={handleOnNewWindow}
-        handleOnNewData={handleOnNewData}
-        addNewWindow={addNewWindow}
+        newDataAccess='Yes'
         columnName={'u_road_name'}
-        nextStep={['areas', 'subRoads']}
       />
 
-      case 3:
-        return (
-          <AllListing
-            label={`Sub roads in ${formData.road}`}
-            addNew={'Sub Road'}
-            formData={'subRoad'}
-            data={dataObj.subRoads}
-            columnName={'u_sub_road_name'}
-            handleInputChange={handleInputChange}
-            handleDataObj={handleDataObj}
-            handleBusinessId={handleBusinessId}
-            handleOnNewWindow={handleOnNewWindow}
-            handleOnNewData={handleOnNewData}
+      case 3: return <AllListing
+        label={`Sub roads in ${formData.road}`}
+        addNew={'Sub Road'}
+        fieldName={'subRoad'}
+        data={dataObj.subRoads}
+        columnName={'u_sub_road_name'}
+        newDataAccess='Yes'
+      />
 
-            addNewWindow={addNewWindow}
-
-          />
-        )
 
       case 4: return <AllListing
         label={`Areas in ${formData.city}`}
         addNew={'Area'}
-        formData={'area'}
+        fieldName={'area'}
         data={dataObj.areas}
         columnName={'u_area_name'}
-        handleDataObj={handleDataObj}
-        handleInputChange={handleInputChange}
-        handleBusinessId={handleBusinessId}
-        handleOnNewData={handleOnNewData}
-
-        handleOnNewWindow={handleOnNewWindow}
-        addNewWindow={addNewWindow}
-        nextStep={['subAreas']}
+        newDataAccess='Yes'
       />
 
 
       case 5: return <AllListing
         label={`Sub Areas in  ${formData.area}`}
         addNew={'Sub Area'}
-        formData={'subArea'}
+        fieldName={'subArea'}
+        newDataAccess='Yes'
         data={dataObj.subAreas}
         columnName={'u_sub_area_name_id'}
-        handleDataObj={handleDataObj}
-        handleInputChange={handleInputChange}
-        handleBusinessId={handleBusinessId}
-        handleOnNewData={handleOnNewData}
-
-        handleOnNewWindow={handleOnNewWindow}
-        addNewWindow={addNewWindow}
-
       />
 
       case 6: return <AllListing
         label={'Categories'}
         addNew={"Category"}
-        formData={'category'}
+        newDataAccess='Yes'
+        fieldName={'category'}
         data={dataObj.category}
         columnName={"u_business_category"}
-        handleDataObj={handleDataObj}
-        handleInputChange={handleInputChange}
-        handleBusinessId={handleBusinessId}
-        handleOnNewWindow={handleOnNewWindow}
-        addNewWindow={addNewWindow}
-
-        nextStep={["subCategories"]}
-
       />
+
       case 7: return <AllListing
         label={`Sub Category in ${formData.category}`}
         addNew={'Sub Category'}
-        formData={'subCategory'}
+        fieldName={'subCategory'}
         data={dataObj.subCategories}
         columnName={"u_business_sub_category"}
-        handleDataObj={handleDataObj}
-        handleInputChange={handleInputChange}
-        handleBusinessId={handleBusinessId}
-        handleOnNewWindow={handleOnNewWindow}
-        addNewWindow={addNewWindow}
-
-        nextStep={["categoryTypes"]}
       />
+
       case 8: return <AllListing
         label={`Category Type in ${formData.subCategory}`}
         addNew={"Category Type"}
-        formData={'categoryType'}
+        fieldName={'categoryType'}
         data={dataObj.categoryTypes}
         columnName={"u_category_type"}
-        handleDataObj={handleDataObj}
-        handleOnNewWindow={handleOnNewWindow}
-        addNewWindow={addNewWindow}
-
-        handleBusinessId={handleBusinessId}
-        handleInputChange={handleInputChange}
-
       />
 
       case 9: return <AllListing
         label={"Business Class"}
         addNew={"Class"}
-        formData={'class'}
+        fieldName={'class'}
         data={dataObj.class}
         columnName={"u_business_class"}
-        handleDataObj={handleDataObj}
-        handleInputChange={handleInputChange}
-        handleBusinessId={handleBusinessId}
-        handleOnNewWindow={handleOnNewWindow}
-        addNewWindow={addNewWindow}
-
-
       />
 
       case 10: return <AllListing
         label={"Business Establishment"}
         addNew={"Establishment"}
-        formData={"establishment"}
+        fieldName={"establishment"}
         data={dataObj.establishment}
         columnName={'u_business_establishment'}
-        handleDataObj={handleDataObj}
-        handleBusinessId={handleBusinessId}
-        handleOnNewWindow={handleOnNewWindow}
-        addNewWindow={addNewWindow}
-        handleInputChange={handleInputChange}
       />
 
       case 11: return <SubmitBusiness formData={formData} />
@@ -365,12 +203,12 @@ const BusinessListingForm = () => {
   const isStepValid = () => {
     switch (currentStep) {
       case 1: return formData.businessName && formData.city && dataObj.cityData && formData.timeFrom && formData.timeTo;
-      case 2: return formData.road;
-      case 3: return formData.subRoad;
-      case 4: return formData.area;
+      case 2: return formData.road && dataObj.subRoads;
+      case 3: return formData.subRoad && dataObj.areas;
+      case 4: return formData.area && dataObj.subAreas;
       case 5: return formData.subArea;
-      case 6: return formData.category;
-      case 7: return formData.subCategory;
+      case 6: return formData.category && dataObj.subCategories;
+      case 7: return formData.subCategory && dataObj.categoryTypes;
       case 8: return formData.categoryType;
       case 9: return formData.class;
       case 10: return formData.establishment;

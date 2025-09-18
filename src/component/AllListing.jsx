@@ -1,8 +1,10 @@
 import { Building2, MapPin } from 'lucide-react';
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import AddNew from './AddNew';
+import { DirectoryContext } from '../Context';
 
-const ListingRoad = ({ data, handleInputChange, handleDataObj, label, addNew, handleOnNewData, columnName, nextStep, formData, handleBusinessId, addNewWindow, handleOnNewWindow }) => {
+const ListingRoad = ({ data, label, addNew, columnName, fieldName, newDataAccess }) => {
+    const { handleInputChange, handleDataObj, handleBusinessId, addNewWindow, handleOnNewWindow } = useContext(DirectoryContext)
     const [search, setSearch] = useState('');
     const [selected, setSelected] = useState(false)
     const filterRes = data.filter(item => {
@@ -12,7 +14,7 @@ const ListingRoad = ({ data, handleInputChange, handleDataObj, label, addNew, ha
 
     return (
         <>
-            {addNewWindow ? <AddNew label={addNew} handleOnNewWindow={handleOnNewWindow} handleOnNewData={handleOnNewData} /> :
+            {addNewWindow ? <AddNew label={addNew}  /> :
                 <div className="space-y-6">
                     <div className="text-center mb-8">
                         <Building2 className="w-16 h-16 text-blue-600 mx-auto mb-4" />
@@ -55,14 +57,8 @@ const ListingRoad = ({ data, handleInputChange, handleDataObj, label, addNew, ha
                                         checked={selected === item[columnName]}
                                         onChange={(e) => {
                                             setSelected(item[columnName])
-                                            handleInputChange(formData, e.target.value);
-                                            handleBusinessId(formData, item.uni_id)
-                                            if (nextStep) {
-                                                nextStep.length > 1 ? nextStep.map((next) => {
-                                                    handleDataObj(next, item[next])
-                                                }) :
-                                                    handleDataObj(nextStep[0], item[nextStep[0]])
-                                            }
+                                            handleInputChange(fieldName, e.target.value);
+                                            handleBusinessId(fieldName, item.uni_id)
                                         }}
                                         className="hidden"
                                     />
@@ -73,14 +69,16 @@ const ListingRoad = ({ data, handleInputChange, handleDataObj, label, addNew, ha
                         </div>
 
                         {/* Add New Road Button */}
+                        {newDataAccess && 
                         <div className="mt-4 pt-4 border-t border-gray-200">
                             <button
                                 onClick={handleOnNewWindow}
                                 className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-300 hover:text-blue-600 transition-all"
-                            >
+                                >
                                 + Add New {(addNew)}
                             </button>
                         </div>
+                        }
                     </div>
                 </div>
             }
