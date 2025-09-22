@@ -4,7 +4,7 @@ import AddNew from './AddNew';
 import { DirectoryContext } from '../Context';
 
 const ListingRoad = ({ data, label, addNew, columnName, fieldName, newDataAccess }) => {
-    const { handleInputChange, handleDataObj, handleBusinessId, addNewWindow, handleOnNewWindow } = useContext(DirectoryContext)
+    const { handleInputChange, handleBusinessId, addNewWindow, handleOnNewWindow } = useContext(DirectoryContext)
     const [search, setSearch] = useState('');
     const [selected, setSelected] = useState(false)
     const filterRes = data.filter(item => {

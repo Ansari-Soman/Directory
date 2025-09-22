@@ -4,6 +4,8 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import Header from '../component/Header';
 import New from '../component/ListingMessage'
 import ListingMessage from '../component/ListingMessage';
+import axios from 'axios';
+import LoadingScreen from '../component/LoadingScr';
 
 const WebWrapper = () => {
     const [listingSuccess, setListtingSuccess] = useState(true)
@@ -32,8 +34,8 @@ const WebWrapper = () => {
     const [dataObj, setDataObj] = useState({
         cityList: [],
         cityData: '',
-        roads: '',
-        areas: '',
+        roads: [],
+        areas: [],
         subAreas: [],
         subRoads: [],
         category: [],
@@ -58,6 +60,8 @@ const WebWrapper = () => {
         timeFrom: '',
         timeTo: '',
     });
+
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [addNewWindow, setAddnNewWindow] = useState(false)
     const [newDataAdded, setNewDataAdded] = useState(false)
 
@@ -67,15 +71,6 @@ const WebWrapper = () => {
             [field]: value
         }));
 
-    };
-
-
-    // Storing All Data
-    const handleDataObj = (field, value) => {
-        setDataObj(prev => ({
-            ...prev,
-            [field]: value
-        }))
     };
 
     // Storing UNI_IDs
@@ -90,6 +85,40 @@ const WebWrapper = () => {
     const handleOnNewWindow = () => {
         setAddnNewWindow(!addNewWindow)
     }
+
+    const resetFormData = () => {
+        setFormData({
+            businessName: '',
+            city: '',
+            road: '',
+            subRoad: '',
+            area: '',
+            subArea: '',
+            category: '',
+            subCategory: '',
+            categoryType: '',
+            class: '',
+            establishment: '',
+            timeFrom: '',
+            timeTo: '',
+        });
+
+        setDataId({
+            businessName: '',
+            city: '',
+            road: '',
+            subRoad: '',
+            area: '',
+            subArea: '',
+            category: '',
+            subCategory: '',
+            categoryType: '',
+            class: '',
+            establishment: '',
+            timeFrom: '',
+            timeTo: '',
+        });
+    };
 
     // __________-NEW_DATA-__________
     const handleOnNewData = (value, type) => {
@@ -129,14 +158,12 @@ const WebWrapper = () => {
             listingSuccess, setListtingSuccess,
             navigate,
             formData, handleInputChange,
-            dataObj, handleDataObj,
-            handleBusinessId, dataId, handleOnNewWindow, addNewWindow, handleOnNewData
+            dataObj,
+            handleBusinessId, dataId, handleOnNewWindow, addNewWindow, handleOnNewData, setDataObj, isInitialLoading, setIsInitialLoading, resetFormData, newDataAdded
 
         }}>
             <Header />
             <Outlet />
-            <ListingMessage />
-            {/* {filterActive && <FilterPage />} */}
         </DirectoryContext.Provider>
     );
 }

@@ -5,62 +5,99 @@ import Select from 'react-select'
 
 const ListingBusinessName = ({ cities }) => {
     const { handleInputChange, formData, handleBusinessId } = useContext(DirectoryContext)
-    const options = cities.map((city) => (
+
+    // Add this defensive check
+    if (!cities || !Array.isArray(cities)) {
+        return <div>Loading cities...</div>; // or return null
+    }
+
+    const options =
+        cities.map((city) => (
         {
             value: city.u_city_name,
             label: city.u_city_name,
         }
     ));
+
+    // const timeOptions = [
+    //     { display: '12:00 AM', value: '00:00' },
+    //     { display: '12:30 AM', value: '00:30' },
+    //     { display: '01:00 AM', value: '01:00' },
+    //     { display: '01:30 AM', value: '01:30' },
+    //     { display: '02:00 AM', value: '02:00' },
+    //     { display: '02:30 AM', value: '02:30' },
+    //     { display: '03:00 AM', value: '03:00' },
+    //     { display: '03:30 AM', value: '03:30' },
+    //     { display: '04:00 AM', value: '04:00' },
+    //     { display: '04:30 AM', value: '04:30' },
+    //     { display: '05:00 AM', value: '05:00' },
+    //     { display: '05:30 AM', value: '05:30' },
+    //     { display: '06:00 AM', value: '06:00' },
+    //     { display: '06:30 AM', value: '06:30' },
+    //     { display: '07:00 AM', value: '07:00' },
+    //     { display: '07:30 AM', value: '07:30' },
+    //     { display: '08:00 AM', value: '08:00' },
+    //     { display: '08:30 AM', value: '08:30' },
+    //     { display: '09:00 AM', value: '09:00' },
+    //     { display: '09:30 AM', value: '09:30' },
+    //     { display: '10:00 AM', value: '10:00' },
+    //     { display: '10:30 AM', value: '10:30' },
+    //     { display: '11:00 AM', value: '11:00' },
+    //     { display: '11:30 AM', value: '11:30' },
+    //     { display: '12:00 PM', value: '12:00' },
+    //     { display: '12:30 PM', value: '12:30' },
+    //     { display: '01:00 PM', value: '13:00' },
+    //     { display: '01:30 PM', value: '13:30' },
+    //     { display: '02:00 PM', value: '14:00' },
+    //     { display: '02:30 PM', value: '14:30' },
+    //     { display: '03:00 PM', value: '15:00' },
+    //     { display: '03:30 PM', value: '15:30' },
+    //     { display: '04:00 PM', value: '16:00' },
+    //     { display: '04:30 PM', value: '16:30' },
+    //     { display: '05:00 PM', value: '17:00' },
+    //     { display: '05:30 PM', value: '17:30' },
+    //     { display: '06:00 PM', value: '18:00' },
+    //     { display: '06:30 PM', value: '18:30' },
+    //     { display: '07:00 PM', value: '19:00' },
+    //     { display: '07:30 PM', value: '19:30' },
+    //     { display: '08:00 PM', value: '20:00' },
+    //     { display: '08:30 PM', value: '20:30' },
+    //     { display: '09:00 PM', value: '21:00' },
+    //     { display: '09:30 PM', value: '21:30' },
+    //     { display: '10:00 PM', value: '22:00' },
+    //     { display: '10:30 PM', value: '22:30' },
+    //     { display: '11:00 PM', value: '23:00' },
+    //     { display: '11:30 PM', value: '23:30' }
+    // ];
+
+
     const timeOptions = [
         { display: '12:00 AM', value: '00:00' },
-        { display: '12:30 AM', value: '00:30' },
         { display: '01:00 AM', value: '01:00' },
-        { display: '01:30 AM', value: '01:30' },
         { display: '02:00 AM', value: '02:00' },
-        { display: '02:30 AM', value: '02:30' },
         { display: '03:00 AM', value: '03:00' },
-        { display: '03:30 AM', value: '03:30' },
         { display: '04:00 AM', value: '04:00' },
-        { display: '04:30 AM', value: '04:30' },
         { display: '05:00 AM', value: '05:00' },
-        { display: '05:30 AM', value: '05:30' },
         { display: '06:00 AM', value: '06:00' },
-        { display: '06:30 AM', value: '06:30' },
         { display: '07:00 AM', value: '07:00' },
-        { display: '07:30 AM', value: '07:30' },
         { display: '08:00 AM', value: '08:00' },
-        { display: '08:30 AM', value: '08:30' },
         { display: '09:00 AM', value: '09:00' },
-        { display: '09:30 AM', value: '09:30' },
         { display: '10:00 AM', value: '10:00' },
-        { display: '10:30 AM', value: '10:30' },
         { display: '11:00 AM', value: '11:00' },
-        { display: '11:30 AM', value: '11:30' },
         { display: '12:00 PM', value: '12:00' },
-        { display: '12:30 PM', value: '12:30' },
         { display: '01:00 PM', value: '13:00' },
-        { display: '01:30 PM', value: '13:30' },
         { display: '02:00 PM', value: '14:00' },
-        { display: '02:30 PM', value: '14:30' },
         { display: '03:00 PM', value: '15:00' },
-        { display: '03:30 PM', value: '15:30' },
         { display: '04:00 PM', value: '16:00' },
-        { display: '04:30 PM', value: '16:30' },
         { display: '05:00 PM', value: '17:00' },
-        { display: '05:30 PM', value: '17:30' },
         { display: '06:00 PM', value: '18:00' },
-        { display: '06:30 PM', value: '18:30' },
         { display: '07:00 PM', value: '19:00' },
-        { display: '07:30 PM', value: '19:30' },
         { display: '08:00 PM', value: '20:00' },
-        { display: '08:30 PM', value: '20:30' },
         { display: '09:00 PM', value: '21:00' },
-        { display: '09:30 PM', value: '21:30' },
         { display: '10:00 PM', value: '22:00' },
-        { display: '10:30 PM', value: '22:30' },
-        { display: '11:00 PM', value: '23:00' },
-        { display: '11:30 PM', value: '23:30' }
+        { display: '11:00 PM', value: '23:00' }
     ];
+
     return (
         <>
             <div className="space-y-6">
@@ -136,32 +173,7 @@ const ListingBusinessName = ({ cities }) => {
                 </div>
 
 
-                {/* *************************************TESTING****************************** */}
 
-                {/* __________-CITY-__________ */}
-                {/* <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
-                    <select
-                        value={formData.city}
-                        onChange={(e) => {
-                            //   console.log("city === ", e)
-                            handleInputChange('city', e.target.value)
-                        }
-                        }
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
-                    >
-                        <option value="">
-                            Select your city
-                        </option>
-                        {cities.map(city => (
-                            <option key={city.uni_id} value={city.u_city_name}>
-                                {city.u_city_name}
-                            </option>
-                        ))}
-                    </select>
-                </div> */}
-
-                {/* <SearchableCitySelect handleInputChange={handleInputChange} formData={formData} cities={cities} /> */}
 
 
                 <Select
