@@ -66,25 +66,25 @@ const BusinessListingForm = () => {
   }, []);
 
   // Fethcing City Data
-  // useEffect(() => {
-  //   if (!formData.city) return;
-  //   axios
-  //     .get(`http://localhost:8083/api/citydata/${formData.city}`, {
-  //       headers: { application: "dir" },
-  //     })
-  //     .then((res) =>
-  //       setDataObj((prev) => ({
-  //         ...prev,
-  //         cityData: res.data.record[0],
-  //       }))
-  //     )
+  useEffect(() => {
+    if (!formData.city) return;
+    axios
+      .get(`http://localhost:8083/api/citydata/${formData.city}`, {
+        headers: { application: "dir" },
+      })
+      .then((res) =>
+        setDataObj((prev) => ({
+          ...prev,
+          cityData: res.data.record[0],
+        }))
+      )
 
-  //     .catch((e) => console.log(e));
-  //   const [city] = dataObj.cityList.filter(
-  //     (item) => item.u_city_name === formData.city
-  //   );
-  //   handleBusinessId("city", city.uni_id);
-  // }, [formData.city, newDataAdded]);
+      .catch((e) => console.log(e));
+    const [city] = dataObj.cityList.filter(
+      (item) => item.u_city_name === formData.city
+    );
+    handleBusinessId("city", city.uni_id);
+  }, [formData.city, newDataAdded]);
 
   useEffect(() => {
     if (!dataObj.cityData) return;
@@ -176,8 +176,8 @@ const BusinessListingForm = () => {
       .then((res) => {
         setIsInitialLoading(false);
         console.log("SuccessFull", res);
-        // resetFormData();
-        setCurrentStep(9);
+        resetFormData();
+        setCurrentStep(1);
         setListtingSuccess(true);
         navigate("/listing/success");
       })

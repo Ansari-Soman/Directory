@@ -136,3 +136,39 @@
 
 // Remove all the separate useEffects and replace with:
 
+
+// SERVER RULE
+   // For area
+    // let area = new MayaRecord('dir_areas')
+    // area.addQuery('uni_id', current.get('u_area_id').id)
+    // area.addQuery('u_area_state', 'new')
+    // area.execute();
+    // if (area.next()) {
+    //     area.setValue('u_area_state', 'approved')
+    // }
+
+    // // For sub road    
+    // let subRoad = new MayaRecord('dir_sub_road')
+    // if (current.get('u_sub_road_id').name) {
+    //     subRoad.addQuery('uni_id', current.get('u_sub_road_id').id)
+    //     subRoad.addQuery('u_subroad_state', 'new')
+    //     subRoad.execute()
+    //     if (subRoad.next()) {
+    //         subRoad.setValue('u_subroad_state', 'approved')
+    //     }
+    // }
+
+    // // for sub area
+    // let subArea = new MayaRecord('dir_sub_area')
+    // if (current.get('u_sub_area_id').name) {
+    //     subArea.addQuery('uni_id', current.get('u_sub_area_id').id)
+    //     subArea.addQuery('u_subarea_state', 'new')
+    //     subArea.execute()
+    //     if (subArea.next()) {
+    //         subArea.setValue('u_subarea_state', 'approved')
+    //     }
+    // }
+
+//     area.executeUpdate();
+//     subRoad.executeUpdate();
+//     subArea.executeUpdate();
