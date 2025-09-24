@@ -66,25 +66,25 @@ const BusinessListingForm = () => {
   }, []);
 
   // Fethcing City Data
-  useEffect(() => {
-    if (!formData.city) return;
-    axios
-      .get(`http://localhost:8083/api/citydata/${formData.city}`, {
-        headers: { application: "dir" },
-      })
-      .then((res) =>
-        setDataObj((prev) => ({
-          ...prev,
-          cityData: res.data.record[0],
-        }))
-      )
+  // useEffect(() => {
+  //   if (!formData.city) return;
+  //   axios
+  //     .get(`http://localhost:8083/api/citydata/${formData.city}`, {
+  //       headers: { application: "dir" },
+  //     })
+  //     .then((res) =>
+  //       setDataObj((prev) => ({
+  //         ...prev,
+  //         cityData: res.data.record[0],
+  //       }))
+  //     )
 
-      .catch((e) => console.log(e));
-    const [city] = dataObj.cityList.filter(
-      (item) => item.u_city_name === formData.city
-    );
-    handleBusinessId("city", city.uni_id);
-  }, [formData.city, newDataAdded]);
+  //     .catch((e) => console.log(e));
+  //   const [city] = dataObj.cityList.filter(
+  //     (item) => item.u_city_name === formData.city
+  //   );
+  //   handleBusinessId("city", city.uni_id);
+  // }, [formData.city, newDataAdded]);
 
   useEffect(() => {
     if (!dataObj.cityData) return;
@@ -164,6 +164,7 @@ const BusinessListingForm = () => {
 
   // __________-SUBMIT-__________
   const handleOnSubmit = () => {
+    console.log("form data", formData, "Data ids", dataId);
     setIsInitialLoading(true);
     axios
       .post("http://localhost:8083/api/listing/business", dataId, {
@@ -175,8 +176,8 @@ const BusinessListingForm = () => {
       .then((res) => {
         setIsInitialLoading(false);
         console.log("SuccessFull", res);
-        resetFormData();
-        setCurrentStep(1);
+        // resetFormData();
+        setCurrentStep(9);
         setListtingSuccess(true);
         navigate("/listing/success");
       })
@@ -298,38 +299,39 @@ const BusinessListingForm = () => {
     }
   };
 
-  const isStepValid = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          formData.businessName &&
-          formData.city &&
-          dataObj.cityData &&
-          formData.timeFrom &&
-          formData.timeTo
-        );
-      case 2:
-        return formData.road && dataObj.subRoads;
-      case 3:
-        return formData.subRoad && dataObj.areas;
-      case 4:
-        return formData.area && dataObj.subAreas;
-      case 5:
-        return formData.subArea;
-      case 6:
-        return formData.category && dataObj.subCategories;
-      case 7:
-        return formData.subCategory && dataObj.categoryTypes;
-      case 8:
-        return formData.categoryType;
-      case 9:
-        return formData.class;
-      case 10:
-        return formData.establishment;
-      default:
-        return false;
-    }
-  };
+  // const isStepValid = () => {
+  //   switch (currentStep) {
+  //     case 1:
+  //       return (
+  //         formData.businessName &&
+  //         formData.city &&
+  //         dataObj.cityData &&
+  //         formData.timeFrom &&
+  //         formData.timeTo
+  //       );
+  //     case 2:
+  //       return formData.road && dataObj.subRoads;
+  //     case 3:
+  //       return formData.subRoad && dataObj.areas;
+  //     case 4:
+  //       return formData.area && dataObj.subAreas;
+  //     case 5:
+  //       return formData.subArea;
+  //     case 6:
+  //       return formData.category && dataObj.subCategories;
+  //     case 7:
+  //       return formData.subCategory && dataObj.categoryTypes;
+  //     case 8:
+  //       return formData.categoryType;
+  //     case 9:
+  //       return formData.class;
+  //     case 10:
+  //       return formData.establishment;
+  //     default:
+  //       return false;
+  //   }
+  // };
+  const isStepValid = () => true;
 
   if (isInitialLoading) {
     return <LoadingScreen message="Loading your business listing data..." />;
