@@ -5,9 +5,7 @@ import ListingBusiName from "./ListingBusinessName";
 import AllListing from "./AllListing";
 import SubmitBusiness from "./SubmitBusiness";
 import { DirectoryContext } from "../Context";
-import SuccessPage from "./ListingMessage";
-import { data } from "react-router-dom";
-import LoadingScreen from "./LoadingScr";
+import LoadingScreen from "../Loading/LoadingScr";
 
 const BusinessListingForm = () => {
   const {
@@ -23,6 +21,7 @@ const BusinessListingForm = () => {
     isInitialLoading,
     setIsInitialLoading,
     resetFormData,
+    handleInputChange
   } = useContext(DirectoryContext);
   const [currentStep, setCurrentStep] = useState(1);
   const [isSkip, setIsSkip] = useState(false);
@@ -145,10 +144,23 @@ const BusinessListingForm = () => {
     newDataAdded,
   ]);
 
+  const handleOnSkip = (currentStep) => {
+    if (currentStep === 3) {
+      handleInputChange('subRoad', '')
+      handleBusinessId('subRoad', '')
+    } else if (currentStep === 5) {
+      handleInputChange('subArea', '')
+      handleBusinessId('subArea', '')
+    } else if (currentStep === 8) {
+      handleInputChange('categoryType', '')
+      handleBusinessId('categoryType', '')
+    }
+    nextStep()
+  }
   // Setup For SKIP button
   useEffect(() => {
     if (currentStep === 3 || currentStep === 5 || currentStep === 8) {
-      setIsSkip(true);
+    setIsSkip(true);
     } else {
       setIsSkip(false);
     }
@@ -162,6 +174,9 @@ const BusinessListingForm = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
+  // window.addEventListener("load", () => {
+  //   resetFormData();
+  // });
   // __________-SUBMIT-__________
   const handleOnSubmit = () => {
     console.log("form data", formData, "Data ids", dataId);
@@ -299,42 +314,41 @@ const BusinessListingForm = () => {
     }
   };
 
-  // const isStepValid = () => {
-  //   switch (currentStep) {
-  //     case 1:
-  //       return (
-  //         formData.businessName &&
-  //         formData.city &&
-  //         dataObj.cityData &&
-  //         formData.timeFrom &&
-  //         formData.timeTo
-  //       );
-  //     case 2:
-  //       return formData.road && dataObj.subRoads;
-  //     case 3:
-  //       return formData.subRoad && dataObj.areas;
-  //     case 4:
-  //       return formData.area && dataObj.subAreas;
-  //     case 5:
-  //       return formData.subArea;
-  //     case 6:
-  //       return formData.category && dataObj.subCategories;
-  //     case 7:
-  //       return formData.subCategory && dataObj.categoryTypes;
-  //     case 8:
-  //       return formData.categoryType;
-  //     case 9:
-  //       return formData.class;
-  //     case 10:
-  //       return formData.establishment;
-  //     default:
-  //       return false;
-  //   }
-  // };
-  const isStepValid = () => true;
+  const isStepValid = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          formData.businessName &&
+          formData.city &&
+          dataObj.cityData &&
+          formData.timeFrom &&
+          formData.timeTo
+        );
+      case 2:
+        return formData.road && dataObj.subRoads;
+      case 3:
+        return formData.subRoad && dataObj.areas;
+      case 4:
+        return formData.area && dataObj.subAreas;
+      case 5:
+        return formData.subArea;
+      case 6:
+        return formData.category && dataObj.subCategories;
+      case 7:
+        return formData.subCategory && dataObj.categoryTypes;
+      case 8:
+        return formData.categoryType;
+      case 9:
+        return formData.class;
+      case 10:
+        return formData.establishment;
+      default:
+        return false;
+    }
+  };
 
   if (isInitialLoading) {
-    return <LoadingScreen message="Loading your business listing data..." />;
+    return <LoadingScreen  />;
   }
 
   return (
@@ -366,7 +380,7 @@ const BusinessListingForm = () => {
                 {/* __________SKIP-BUTTON__________ */}
                 {isSkip && (
                   <button
-                    onClick={nextStep}
+                    onClick={() => handleOnSkip(currentStep)}
                     className="flex items-center px-6 py-3 rounded-lg font-medium transition-all   text-blue-600 textwhite hover-blue-700 cursor-pointer"
                   >
                     Skip

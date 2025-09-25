@@ -136,9 +136,11 @@ const WebWrapper = () => {
         if (res.data.message === "success") {
           console.log("in the success");
           setNewDataAdded(!newDataAdded);
+          
         }
       })
-      .catch((e) => console.log(e));
+      .catch((e) => console.log(e))
+      .finally(() => {});
   };
 
   // Not in use
