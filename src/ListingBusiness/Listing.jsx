@@ -30,27 +30,17 @@ const BusinessListingForm = () => {
     const fetchAllData = async () => {
       setIsInitialLoading(true);
       try {
-        const [cities, categories, classes, establishments] = await Promise.all(
-          [
-            axios.get("http://localhost:8083/api/city/list", {
-              headers: { application: "dir" },
-            }),
-            axios.get("http://localhost:8083/api/business/category", {
-              headers: { application: "dir" },
-            }),
-            axios.get("http://localhost:8083/api/class/list", {
-              headers: { application: "dir" },
-            }),
-            axios.get("http://localhost:8083/api/establishment/list", {
-              headers: { application: "dir" },
-            }),
-          ]
-        );
+        const [classes, establishments] = await Promise.all([
+          axios.get("http://localhost:8083/api/class/list", {
+            headers: { application: "dir" },
+          }),
+          axios.get("http://localhost:8083/api/establishment/list", {
+            headers: { application: "dir" },
+          }),
+        ]);
 
         setDataObj((prev) => ({
           ...prev,
-          cityList: cities.data.record,
-          category: categories.data.record,
           class: classes.data.record,
           establishment: establishments.data.record,
         }));

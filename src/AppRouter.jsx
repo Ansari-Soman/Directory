@@ -1,9 +1,12 @@
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
 import WebWrapper from "./Wrappers/WebWrapper";
-import Search from "./component/Search";
-import CategoriesGrid from "./component/CategoriesGrid";
+import Search from "./Dashboard/Search";
+import CategoriesGrid from "./Dashboard/CategoriesGrid";
 import Listing from "./ListingBusiness/Listing";
 import ListingMessage from "./ListingBusiness/ListingMessage";
+import BusinessListingsSection from "./Dashboard/BLSClaude";
+import BusinessDetailModal from "./Dashboard/BDClaude";
+import BusinessListSectionSom from "./Dashboard/BusinessListSection";
 
 const MainComponent = () => {
   const routers = createBrowserRouter([
@@ -13,9 +16,11 @@ const MainComponent = () => {
         {
           path: "/",
           element: (
-            <>  
+            <>
               <Search />
               <CategoriesGrid />
+              <BusinessListingsSection />
+              <BusinessListSectionSom />
             </>
           ),
         },

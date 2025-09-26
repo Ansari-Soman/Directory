@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DirectoryContext } from "../Context";
 import { Outlet, useNavigate } from "react-router-dom";
-import Header from "../component/Header";
+import Header from "../Dashboard/Header";
 import axios from "axios";
 
 const WebWrapper = () => {
@@ -117,6 +117,31 @@ const WebWrapper = () => {
     });
   };
 
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const [cities, categories] = await Promise.all([
+          axios.get("http://localhost:8083/api/city/list", {
+            headers: { application: "dir" },
+          }),
+          axios.get("http://localhost:8083/api/business/category", {
+            headers: { application: "dir" },
+          }),
+        ]);
+
+        setDataObj((prev) => ({
+          ...prev,
+          cityList: cities.data.record,
+          category: categories.data.record,
+        }));
+      } catch (err) {
+        console.log("Error while fetching cityList", err);
+      }
+    };
+
+    fetchCities();
+  }, []);
+
   // __________-NEW_DATA-__________
   const handleOnNewData = (value, type) => {
     const newData = {
@@ -136,7 +161,6 @@ const WebWrapper = () => {
         if (res.data.message === "success") {
           console.log("in the success");
           setNewDataAdded(!newDataAdded);
-          
         }
       })
       .catch((e) => console.log(e))

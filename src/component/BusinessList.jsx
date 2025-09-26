@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { businesses } from "./data";
+import { businesses } from "../Dashboard/data";
 import { useContext } from "react";
 import { DirectoryContext } from "../Context";
 
