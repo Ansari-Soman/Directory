@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DirectoryContext } from "../Context";
+import BusinessCard from "../component/BusinessCard";
 import {
   MapPin,
   Clock,
@@ -10,6 +11,7 @@ import {
   Filter,
   Search,
 } from "lucide-react";
+import { businesses } from "./data";
 const BusinessListSectionSom = () => {
   const { dataObj } = useContext(DirectoryContext);
   const filterBusiness = "";
@@ -19,6 +21,7 @@ const BusinessListSectionSom = () => {
     () => console.log(selectedCategory, selectedCity),
     [selectedCategory, selectedCity]
   );
+
   console.log("In the listing busi", dataObj);
   return (
     <>
@@ -80,6 +83,11 @@ const BusinessListSectionSom = () => {
         </div>
 
         {/* __________-LISTED-BUSINESS-__________ */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {dataObj.businesses.map((business) => (
+            <BusinessCard key={business.uni_id} business={business} />
+          ))}
+        </div>
       </div>
     </>
   );

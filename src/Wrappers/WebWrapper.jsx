@@ -42,6 +42,7 @@ const WebWrapper = () => {
     categoryTypes: [],
     class: [],
     establishment: [],
+    businesses: [],
   });
 
   const [dataId, setDataId] = useState({
@@ -120,11 +121,14 @@ const WebWrapper = () => {
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const [cities, categories] = await Promise.all([
+        const [cities, categories, businesses] = await Promise.all([
           axios.get("http://localhost:8083/api/city/list", {
             headers: { application: "dir" },
           }),
           axios.get("http://localhost:8083/api/business/category", {
+            headers: { application: "dir" },
+          }),
+          axios.get("http://localhost:8083/api/get/businesses", {
             headers: { application: "dir" },
           }),
         ]);
@@ -133,6 +137,7 @@ const WebWrapper = () => {
           ...prev,
           cityList: cities.data.record,
           category: categories.data.record,
+          businesses: businesses.data.record,
         }));
       } catch (err) {
         console.log("Error while fetching cityList", err);
