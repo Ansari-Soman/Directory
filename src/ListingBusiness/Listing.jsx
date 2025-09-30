@@ -23,6 +23,9 @@ const BusinessListingForm = () => {
     resetFormData,
     handleInputChange
   } = useContext(DirectoryContext);
+  useEffect(() => {
+    console.log("Form data", formData);
+  }, [formData]);
   const [currentStep, setCurrentStep] = useState(1);
   const [isSkip, setIsSkip] = useState(false);
 
@@ -136,21 +139,21 @@ const BusinessListingForm = () => {
 
   const handleOnSkip = (currentStep) => {
     if (currentStep === 3) {
-      handleInputChange('subRoad', '')
-      handleBusinessId('subRoad', '')
+      handleInputChange("subRoad", "");
+      handleBusinessId("subRoad", "");
     } else if (currentStep === 5) {
-      handleInputChange('subArea', '')
-      handleBusinessId('subArea', '')
+      handleInputChange("subArea", "");
+      handleBusinessId("subArea", "");
     } else if (currentStep === 8) {
-      handleInputChange('categoryType', '')
-      handleBusinessId('categoryType', '')
+      handleInputChange("categoryType", "");
+      handleBusinessId("categoryType", "");
     }
-    nextStep()
-  }
+    nextStep();
+  };
   // Setup For SKIP button
   useEffect(() => {
     if (currentStep === 3 || currentStep === 5 || currentStep === 8) {
-    setIsSkip(true);
+      setIsSkip(true);
     } else {
       setIsSkip(false);
     }
@@ -164,9 +167,6 @@ const BusinessListingForm = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
-  // window.addEventListener("load", () => {
-  //   resetFormData();
-  // });
   // __________-SUBMIT-__________
   const handleOnSubmit = () => {
     console.log("form data", formData, "Data ids", dataId);
@@ -311,8 +311,8 @@ const BusinessListingForm = () => {
           formData.businessName &&
           formData.city &&
           dataObj.cityData &&
-          formData.timeFrom &&
-          formData.timeTo
+          formData.firstShiftFrom &&
+          formData.firstShiftTo
         );
       case 2:
         return formData.road && dataObj.subRoads;

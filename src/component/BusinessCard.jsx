@@ -31,7 +31,7 @@ const BusinessCard = ({ business }) => {
       .join(", "),
   };
 
-  console.log("Loca", businessDetail.location);
+  // console.log("Loca", businessDetail.location);
   // Format time display
   const formatTime = (time) => {
     if (!time) return "";

@@ -9,7 +9,7 @@ const WebWrapper = () => {
   const navigate = useNavigate();
 
   const [token, setToken] = useState(
-    "eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOiJ7XCJtYWluX2FwcFwiOntcIm5hbWVcIjpcImF1dG9wb3J0YWxcIiwgXCJhcHBfY29kZVwiOlwiYXV0b1wiLCBcImFwcF9hZGRyZXNzXCI6XCJodHRwOi8vbG9jYWxob3N0OjgwODNcIn0sXCJzZWNvbmRhcnlfYXBwXCI6W119Iiwic3ViIjoiaGlmenVyIiwiZXhwIjoxNzU5MjEyODY2LCJpYXQiOjE3NTg2MDgwNjZ9.It5-lVpNtz63olldKZZSKMnt-ct93zLh4vFmhHWS33Yimct7PZsXuJh95FMnvS7t5qSyj4v4ppsifEXAghWdQA"
+    "eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOiJ7XCJtYWluX2FwcFwiOntcIm5hbWVcIjpcImF1dG9wb3J0YWxcIiwgXCJhcHBfY29kZVwiOlwiYXV0b1wiLCBcImFwcF9hZGRyZXNzXCI6XCJodHRwOi8vbG9jYWxob3N0OjgwODNcIn0sXCJzZWNvbmRhcnlfYXBwXCI6W119Iiwic3ViIjoiaGlmenVyIiwiZXhwIjoxNzU5Mzg3MTAwLCJpYXQiOjE3NTg3ODIzMDB9.02OElPrDYkldLClu7tjrYPbsf9rBeKZKk-GfSJKmNQ3xeACPANANHPIIRPFX4cISYSJ3d2cUJuid9wy69PpgOg"
   );
 
   // COMPLETE LOGIC
@@ -26,8 +26,10 @@ const WebWrapper = () => {
     categoryType: "",
     class: "",
     establishment: "",
-    timeFrom: "",
-    timeTo: "",
+    firstShiftFrom: "",
+    firstShiftTo: "",
+    secondShiftFrom: "",
+    secondShiftTo: "",
   });
 
   const [dataObj, setDataObj] = useState({
@@ -57,8 +59,10 @@ const WebWrapper = () => {
     categoryType: "",
     class: "",
     establishment: "",
-    timeFrom: "",
-    timeTo: "",
+    firstShiftFrom: "",
+    firstShiftTo: "",
+    secondShiftFrom: "",
+    secondShiftTo: "",
   });
 
   const [isInitialLoading, setIsInitialLoading] = useState(true);

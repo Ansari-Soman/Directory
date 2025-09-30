@@ -7,6 +7,7 @@ import ListingMessage from "./ListingBusiness/ListingMessage";
 import BusinessListingsSection from "./Dashboard/BLSClaude";
 import BusinessDetailModal from "./Dashboard/BDClaude";
 import BusinessListSectionSom from "./Dashboard/BusinessListSection";
+import Test from "./component/Test";
 
 const MainComponent = () => {
   const routers = createBrowserRouter([
@@ -21,6 +22,7 @@ const MainComponent = () => {
               <CategoriesGrid />
               <BusinessListingsSection />
               <BusinessListSectionSom />
+              <Test />
             </>
           ),
         },

@@ -17,12 +17,12 @@ const BusinessListSectionSom = () => {
   const filterBusiness = "";
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  useEffect(
-    () => console.log(selectedCategory, selectedCity),
-    [selectedCategory, selectedCity]
-  );
+  // useEffect(
+  //   () => console.log(selectedCategory, selectedCity),
+  //   [selectedCategory, selectedCity]
+  // );
 
-  console.log("In the listing busi", dataObj);
+  // console.log("In the listing busi", dataObj);
   return (
     <>
       <div className="container mx-auto  px-6 py-3 ">

@@ -136,39 +136,56 @@
 
 // Remove all the separate useEffects and replace with:
 
+                {/* __________-TIMING-________ */}
 
-// SERVER RULE
-   // For area
-    // let area = new MayaRecord('dir_areas')
-    // area.addQuery('uni_id', current.get('u_area_id').id)
-    // area.addQuery('u_area_state', 'new')
-    // area.execute();
-    // if (area.next()) {
-    //     area.setValue('u_area_state', 'approved')
-    // }
+        //   <div className="mb-8">
+        //     <label className="block text-sm font-medium text-gray-700 mb-2">
+        //       Business Time
+        //     </label>
 
-    // // For sub road    
-    // let subRoad = new MayaRecord('dir_sub_road')
-    // if (current.get('u_sub_road_id').name) {
-    //     subRoad.addQuery('uni_id', current.get('u_sub_road_id').id)
-    //     subRoad.addQuery('u_subroad_state', 'new')
-    //     subRoad.execute()
-    //     if (subRoad.next()) {
-    //         subRoad.setValue('u_subroad_state', 'approved')
-    //     }
-    // }
+        //     <div className="grid grid-cols-2 gap-4">
+        //       {/* From Time - Dropdown */}
+        //       <div>
+        //         <label className="block text-xs font-medium text-gray-600 mb-1">
+        //           From
+        //         </label>
+        //         <select
+        //           value={formData.timeFrom}
+        //           onChange={(e) => {
+        //             handleBusinessId("timeFrom", e.target.value);
+        //             handleInputChange("timeFrom", e.target.value);
+        //           }}
+        //           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        //         >
+        //           <option value="">Select start time</option>
+        //           {timeOptions.map((time) => (
+        //             <option key={time.value} value={time.value}>
+        //               {time.display}
+        //             </option>
+        //           ))}
+        //         </select>
+        //       </div>
 
-    // // for sub area
-    // let subArea = new MayaRecord('dir_sub_area')
-    // if (current.get('u_sub_area_id').name) {
-    //     subArea.addQuery('uni_id', current.get('u_sub_area_id').id)
-    //     subArea.addQuery('u_subarea_state', 'new')
-    //     subArea.execute()
-    //     if (subArea.next()) {
-    //         subArea.setValue('u_subarea_state', 'approved')
-    //     }
-    // }
-
-//     area.executeUpdate();
-//     subRoad.executeUpdate();
-//     subArea.executeUpdate();
+        //       {/* To Time - Dropdown */}
+        //       <div>
+        //         <label className="block text-xs font-medium text-gray-600 mb-1">
+        //           To
+        //         </label>
+        //         <select
+        //           value={formData.timeTo}
+        //           onChange={(e) => {
+        //             handleBusinessId("timeTo", e.target.value);
+        //             handleInputChange("timeTo", e.target.value);
+        //           }}
+        //           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        //         >
+        //           <option value="">Select end time</option>
+        //           {timeOptions.map((time) => (
+        //             <option key={time.value} value={time.value}>
+        //               {time.display}
+        //             </option>
+        //           ))}
+        //         </select>
+        //       </div>
+        //     </div>
+        //   </div>
