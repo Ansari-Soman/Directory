@@ -8,7 +8,12 @@ import {
   Filter,
   Search,
 } from "lucide-react";
+import { useContext } from "react";
+import { DirectoryContext } from "../Context";
 const BusinessCard = ({ business }) => {
+  const { formatTime } = useContext(DirectoryContext);
+  const [shift1, shift2] = business.times;
+
   const businessDetail = {
     name: business.u_business_name,
     category: business.u_business_category_ref?.name,
@@ -16,10 +21,10 @@ const BusinessCard = ({ business }) => {
     categoryType: business.u_category_type_ref?.name,
     establishment: business.u_establishment_id?.name,
     class: business.u_business_class_id?.name,
-    timing: {
-      from: business.u_business_time_from,
-      to: business.u_business_timing_to,
-    },
+    firstShiftFrom: (shift1 && shift1.u_time_from) || "",
+    firstShiftTo: (shift1 && shift1.u_time_to) || "",
+    secondShiftFrom: (shift2 && shift2.u_time_from) || "",
+    secondShiftTo: (shift2 && shift2.u_time_to) || "",
     location: [
       business.u_sub_area_id?.name,
       business.u_area_id?.name,
@@ -31,17 +36,6 @@ const BusinessCard = ({ business }) => {
       .join(", "),
   };
 
-  // console.log("Loca", businessDetail.location);
-  // Format time display
-  const formatTime = (time) => {
-    if (!time) return "";
-    const [hours, minutes] = time.split(":");
-    const hour = parseInt(hours, 10);
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-    return `${displayHour}:${minutes} ${ampm}`;
-  };
-
   // Get business class color
   const getClassColor = (businessClass) => {
     switch (businessClass?.toLowerCase()) {
@@ -49,8 +43,8 @@ const BusinessCard = ({ business }) => {
         return "bg-yellow-100 text-yellow-800";
       case "standard":
         return "bg-blue-100 text-blue-800";
-      case "basic":
-        return "bg-gray-100 text-gray-800";
+      case "delux":
+        return "bg-green-100 text-green-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -114,12 +108,32 @@ const BusinessCard = ({ business }) => {
           </div>
         )}
 
-        {businessDetail.timing.from && businessDetail.timing.to && (
+        {/* SHIFT 1 */}
+        {businessDetail.firstShiftFrom && businessDetail.firstShiftTo && (
           <div className="flex items-center text-sm text-gray-600">
             <Clock className="w-4 h-4 mr-2 flex-shrink-0" />
+            {businessDetail.secondShiftFrom &&
+            businessDetail.secondShiftFrom ? (
+              <p className="mr-2">Shift-1:</p>
+            ) : (
+              <p className="mr-2">Timing</p>
+            )}
+
             <span>
-              {formatTime(businessDetail.timing.from)} -{" "}
-              {formatTime(businessDetail.timing.to)}
+              {formatTime(businessDetail.firstShiftFrom)} -{" "}
+              {formatTime(businessDetail.firstShiftTo)}
+            </span>
+          </div>
+        )}
+
+        {/* SHIFT 3 */}
+        {businessDetail.secondShiftFrom && businessDetail.secondShiftFrom && (
+          <div className="flex items-center text-sm text-gray-600">
+            <Clock className="w-4 h-4 mr-2 flex-shrink-0" />
+            <p className="mr-2">Shift-2:</p>
+            <span>
+              {formatTime(businessDetail.secondShiftFrom)} -{" "}
+              {formatTime(businessDetail.secondShiftTo)}
             </span>
           </div>
         )}

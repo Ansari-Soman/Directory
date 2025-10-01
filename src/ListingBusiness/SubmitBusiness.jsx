@@ -1,15 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { DirectoryContext } from "../Context";
 
 const SubmitBusiness = ({ formData = {} }) => {
   // Helper function to format time
-  const formatTime = (time) => {
-    if (!time) return "";
-    const [hours, minutes] = time.split(":");
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-    return `${displayHour}:${minutes} ${ampm}`;
-  };
+  const { formatTime } = useContext(DirectoryContext);
 
   const shifts = () => {
     const hasFirstShift = formData.firstShiftFrom && formData.firstShiftTo;

@@ -10,7 +10,7 @@ function LocationSearch() {
   if (!dataObj.cityList) {
     return <div>Loading cities...</div>; // or return null
   }
-  console.log(dataObj)
+  // console.log(dataObj)
 
   const options = dataObj.cityList.map((city) => ({
     value: city.u_city_name,

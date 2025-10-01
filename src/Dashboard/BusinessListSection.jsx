@@ -12,17 +12,11 @@ import {
   Search,
 } from "lucide-react";
 import { businesses } from "./data";
-const BusinessListSectionSom = () => {
+const BusinessListSection = () => {
   const { dataObj } = useContext(DirectoryContext);
   const filterBusiness = "";
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  // useEffect(
-  //   () => console.log(selectedCategory, selectedCity),
-  //   [selectedCategory, selectedCity]
-  // );
-
-  // console.log("In the listing busi", dataObj);
   return (
     <>
       <div className="container mx-auto  px-6 py-3 ">
@@ -93,4 +87,4 @@ const BusinessListSectionSom = () => {
   );
 };
 
-export default BusinessListSectionSom;
+export default BusinessListSection;

@@ -4,8 +4,6 @@ import Search from "./Dashboard/Search";
 import CategoriesGrid from "./Dashboard/CategoriesGrid";
 import Listing from "./ListingBusiness/Listing";
 import ListingMessage from "./ListingBusiness/ListingMessage";
-import BusinessListingsSection from "./Dashboard/BLSClaude";
-import BusinessDetailModal from "./Dashboard/BDClaude";
 import BusinessListSectionSom from "./Dashboard/BusinessListSection";
 import Test from "./component/Test";
 
@@ -20,9 +18,7 @@ const MainComponent = () => {
             <>
               <Search />
               <CategoriesGrid />
-              <BusinessListingsSection />
               <BusinessListSectionSom />
-              <Test />
             </>
           ),
         },

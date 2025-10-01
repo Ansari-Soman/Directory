@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import BusinessList from '../component/BusinessList.jsx'
 import { cities, businessCategory, businesses } from './data'
 import { SelectInput } from './SelectInput.jsx'
 import { DirectoryContext } from '../Context.jsx'
