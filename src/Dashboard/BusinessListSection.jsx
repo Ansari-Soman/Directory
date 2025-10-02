@@ -19,7 +19,7 @@ const BusinessListSection = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   return (
     <>
-      <div className="container mx-auto  px-6 py-3 ">
+      <div className="container mx-auto  px-6 py-3 my-10">
         {/* __________-HEADER-__________ */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
