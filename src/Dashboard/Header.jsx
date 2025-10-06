@@ -7,18 +7,7 @@ import axios from "axios";
 import { getLocation } from "../Location/CityData";
 
 const Header = () => {
-  // const getLocationInfo = async () => {
-  //   const data = await getLocation();
-  //   console.log("In the header", data);
-  //   if (data && data.length > 0) {
-  //     console.log("In the if");
-  //   } else {
-  //     console.log("in the else");
-  //   }
-  // };
-  // useEffect(() => {
-  //   getLocationInfo();
-  // }, []);
+
 
   return (
     <header className="w-full bg-white shadow-md ">
@@ -28,7 +17,7 @@ const Header = () => {
           to="/"
           className="text-2xl font-bold text-gray-800 hover:text-blue-600 transition"
         >
-          Maya Directory
+          City Maya
         </Link>
 
         {/* Right side buttons */}

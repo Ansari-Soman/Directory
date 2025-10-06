@@ -6,7 +6,7 @@ import { data } from "react-router-dom";
 
 function LocationSearch() {
   // Add this defensive check
-  const { dataObj } = useContext(DirectoryContext);
+  const { dataObj, city } = useContext(DirectoryContext);
   if (!dataObj.cityList) {
     return <div>Loading cities...</div>; // or return null
   }
@@ -19,7 +19,12 @@ function LocationSearch() {
 
   return (
     <div style={{ width: "250px" }}>
-      <Select options={options} placeholder="Search location..." isSearchable />
+      <Select
+        value={options.find((opt) => opt.value === city) || null}
+        options={options}
+        placeholder="Search location..."
+        isSearchable
+      />
     </div>
   );
 }
