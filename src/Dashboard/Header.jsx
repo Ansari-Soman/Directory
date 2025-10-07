@@ -4,7 +4,7 @@ import { cities } from "./data";
 import LocationSearch from "./LocationSearch";
 import { DirectoryContext } from "../Context";
 import axios from "axios";
-import { getLocation } from "../Location/CityData";
+import { getLocation } from "../Location/CityLocation";
 
 const Header = () => {
 

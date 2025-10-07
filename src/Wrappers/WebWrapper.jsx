@@ -3,11 +3,13 @@ import { DirectoryContext } from "../Context";
 import { Outlet, useNavigate } from "react-router-dom";
 import Header from "../Dashboard/Header";
 import axios from "axios";
-import { getLocation } from "../Location/CityData";
+import { getLocation } from "../Location/CityLocation";
+import { AppProperties } from "../AppProperties";
 
 const WebWrapper = () => {
   const [listingSuccess, setListtingSuccess] = useState(true);
   const navigate = useNavigate();
+  const loca = AppProperties.loca;
 
   const [token, setToken] = useState(
     "eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOiJ7XCJtYWluX2FwcFwiOntcIm5hbWVcIjpcImF1dG9wb3J0YWxcIiwgXCJhcHBfY29kZVwiOlwiYXV0b1wiLCBcImFwcF9hZGRyZXNzXCI6XCJodHRwOi8vbG9jYWxob3N0OjgwODNcIn0sXCJzZWNvbmRhcnlfYXBwXCI6W119Iiwic3ViIjoiaGlmenVyIiwiZXhwIjoxNzU5OTkyMTIwLCJpYXQiOjE3NTkzODczMjB9.ZBeLNDDc3f7mqZJ3LDS5tqQfW8whTsmWQjMKS4IjPrfll_w5wU7PCVo2RGlEAAPmNIpcRSVbEq7BjnoagFGupw"
@@ -132,18 +134,6 @@ const WebWrapper = () => {
       timeTo: "",
     });
   };
-  const getLocationInfo = async () => {
-    const data = await getLocation();
-    console.log("In the header", data);
-    if (data && data.length > 0) {
-      console.log("City list == ", dataObj.cityList);
-      const exist = dataObj.cityList.map((city) => city.u_city_name === data);
-      setCity(exist.u_city_name);
-      console.log("exist ? = ", exist);
-    } else {
-      console.log("in the else");
-    }
-  };
 
   // FETCHING City List, Category & Businesses
   useEffect(() => {
@@ -200,20 +190,36 @@ const WebWrapper = () => {
       .finally(() => {});
   };
 
-  // useEffect(() => {
-  //   const temp = async () => {
-  //     const res = await getLocation();
-  //     console.log("res===", res);
-  //   };
-  //   temp();
-  //   console.log("data obj = ", dataObj);
-  //   if (dataObj.cityList < 0) return;
-  // }, []);
+  useEffect(() => {
+    const location = async () => {
+      try {
+        const res = await getLocation();
+        console.log("res ===", res);
+        try {
+          const city = await axios.post(
+            `http://localhost:8083/api/get/location`,
+            res,
+            {
+              headers: { application: "dir" },
+            }
+          );
+          console.log("city ===", city);
+        } catch (err) {
+          console.log("Error while fetching city", err);
+        }
+      } catch (error) {
+        console.error("Failed to get location:", error);
+      }
+    };
+
+    location();
+  }, []);
 
   return (
     <DirectoryContext.Provider
       value={{
         city,
+        setCity,
         token,
         setToken,
         listingSuccess,
@@ -235,8 +241,8 @@ const WebWrapper = () => {
         formatTime,
       }}
     >
-        <Header />
-        <Outlet />
+      <Header />
+      <Outlet />
     </DirectoryContext.Provider>
   );
 };

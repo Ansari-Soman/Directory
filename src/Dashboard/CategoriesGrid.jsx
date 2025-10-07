@@ -1,35 +1,90 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
-import { Home, ShoppingBag, Utensils, Hospital, School, Dumbbell, Theater } from "lucide-react";
-import { DirectoryContext } from "../Context";
-import { gridCategoryData } from "./data";
+import housing from "../assets/housing.jpg";
+import shop from "../assets/shop.jpg";
+import education from "../assets/education.jpg";
+import gym from "../assets/gym.jpg";
+import hospital from "../assets/hospital.jpg";
+import restaurant from "../assets/restaurant.avif";
+import housing2 from "../assets/housing2.avif";
 
-// Props-based reusable grid
 const CategoriesGrid = () => {
-    return (
-      <div className="w-full  py-10 bg-gray-10">
-        <div className="container mx-auto px-4">
-          <h5 className="mb-6 text-center text-3xl font-semibold text-white">
+  const categoryData = [
+    {
+      name: "Housing",
+      image: housing2,
+    },
+    {
+      name: "Shops",
+      image: shop,
+    },
+    {
+      name: "Hospitals",
+      image: hospital,
+    },
+    {
+      name: "Gym",
+      image: gym,
+    },
+    {
+      name: "Restaurant",
+      image: restaurant,
+    },
+    {
+      name: "Education",
+      image: education,
+    },
+    {
+      name: "Housing",
+      image: housing,
+    },
+    {
+      name: "Shops",
+      image: shop,
+    },
+  ];
+
+  return (
+    <div className="w-full bg-gray-50 py-16">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-3">
             Explore Categories
-          </h5>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 ">
-            {gridCategoryData.map((cat) => (
-              <Link
-                key={cat.name}
-                to={cat.path}
-                onClick={() => setSelectedCategory()}
-                className="flex flex-col items-center justify-center p-6 rounded-xl bg-white shadow hover:shadow-md border border-gray-200 hover:border-blue-500 transition"
-              >
-                <div className="text-blue-600 mb-3">{cat.icon}</div>
-                <p className="text-gray-700 font-medium text-sm text-center">
-                  {cat.name}
-                </p>
-              </Link>
-            ))}
-          </div>
+          </h2>
+          <p className="text-gray-600 text-lg">
+            Browse through our wide range of business categories
+          </p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {categoryData.map((item, index) => (
+            <div
+              key={index}
+              className="relative rounded-2xl h-[200px] overflow-hidden group cursor-pointer shadow-md hover:shadow-xl transition-all duration-300"
+            >
+              {/* Image */}
+              <img
+                className="h-full w-full object-cover transform group-hover:scale-110 transition-transform duration-300"
+                src={item.image}
+                alt={item.name}
+              />
+
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+
+              {/* Category Name */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <h3 className="text-2xl font-bold text-white text-center px-4 drop-shadow-lg">
+                  {item.name}
+                </h3>
+              </div>
+
+              {/* Hover Effect Border */}
+              <div className="absolute inset-0 border-2 border-blue-500 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300" />
+            </div>
+          ))}
         </div>
       </div>
-    );
+    </div>
+  );
 };
 
 export default CategoriesGrid;

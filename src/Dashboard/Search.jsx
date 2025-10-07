@@ -17,7 +17,7 @@ const Search = () => {
             className="flex-1 px-5 py-3 outline-none text-gray-700 bg-white"
           />
           <button className="px-6 py-3 bg-blue-500 text-white font-medium hover:bg-blue-600 focus:outline-none">
-            Filter
+            Search
           </button>
         </div>
 
@@ -29,7 +29,7 @@ const Search = () => {
           </div>
           <div className="flex items-center gap-2 text-white">
             <Users className="w-5 h-5" />
-            <span className="font-semibold">10K+ Happy Customers</span>
+            <span className="font-semibold">10K+ Happy Visitors</span>
           </div>
           <div className="flex items-center gap-2 text-white">
             <MapPin className="w-5 h-5" />
