@@ -5,6 +5,7 @@ import Header from "../Dashboard/Header";
 import axios from "axios";
 import { getLocation } from "../Location/CityLocation";
 import { AppProperties } from "../AppProperties";
+import Footer from "../Dashboard/Footer";
 
 const WebWrapper = () => {
   const [listingSuccess, setListtingSuccess] = useState(true);
@@ -243,6 +244,7 @@ const WebWrapper = () => {
     >
       <Header />
       <Outlet />
+      <Footer />
     </DirectoryContext.Provider>
   );
 };

@@ -3,6 +3,7 @@ import Select from "react-select";
 import { cities } from "./data";
 import { DirectoryContext } from "../Context";
 import { data } from "react-router-dom";
+import AsyncSelect from "react-select/async";
 
 function LocationSearch() {
   // Add this defensive check
@@ -19,7 +20,7 @@ function LocationSearch() {
 
   return (
     <div style={{ width: "250px" }}>
-      <Select
+      <AsyncSelect
         value={options.find((opt) => opt.value === city) || null}
         options={options}
         onChange={(e) => setCity(e.value)}
