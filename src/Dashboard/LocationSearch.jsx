@@ -7,7 +7,9 @@ import AsyncSelect from "react-select/async";
 
 function LocationSearch() {
   // Add this defensive check
-  const { dataObj, city, setCity } = useContext(DirectoryContext);
+  const { dataObj, city, setCity, getCityList } = useContext(DirectoryContext);
+  const temp = getCityList("mum");
+  console.log("temp", temp);
   if (!dataObj.cityList) {
     return <div>Loading cities...</div>; // or return null
   }

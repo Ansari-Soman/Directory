@@ -6,8 +6,11 @@ import AllListing from "./AllListing";
 import SubmitBusiness from "./SubmitBusiness";
 import { DirectoryContext } from "../Context";
 import LoadingScreen from "../Loading/LoadingScr";
+import { AppProperties } from "../AppProperties";
 
 const BusinessListingForm = () => {
+  const loca = AppProperties.loca;
+  const appCode = AppProperties.appCode;
   const {
     token,
     setListtingSuccess,
@@ -21,24 +24,23 @@ const BusinessListingForm = () => {
     isInitialLoading,
     setIsInitialLoading,
     resetFormData,
-    handleInputChange
+    handleInputChange,
   } = useContext(DirectoryContext);
-  useEffect(() => {
-    console.log("Form data", formData);
-  }, [formData]);
+
   const [currentStep, setCurrentStep] = useState(1);
   const [isSkip, setIsSkip] = useState(false);
 
+  // Fetching Business class & Establishment
   useEffect(() => {
     const fetchAllData = async () => {
       setIsInitialLoading(true);
       try {
         const [classes, establishments] = await Promise.all([
-          axios.get("http://localhost:8083/api/class/list", {
-            headers: { application: "dir" },
+          axios.get(`${loca}/api/class/list`, {
+            headers: { application: appCode },
           }),
           axios.get("http://localhost:8083/api/establishment/list", {
-            headers: { application: "dir" },
+            headers: { application: appCode },
           }),
         ]);
 
@@ -62,7 +64,7 @@ const BusinessListingForm = () => {
     if (!formData.city) return;
     axios
       .get(`http://localhost:8083/api/citydata/${formData.city}`, {
-        headers: { application: "dir" },
+        headers: { application: appCode },
       })
       .then((res) =>
         setDataObj((prev) => ({
@@ -78,6 +80,7 @@ const BusinessListingForm = () => {
     handleBusinessId("city", city.uni_id);
   }, [formData.city, newDataAdded]);
 
+  // Setting Business Form Data
   useEffect(() => {
     if (!dataObj.cityData) return;
 
@@ -150,6 +153,7 @@ const BusinessListingForm = () => {
     }
     nextStep();
   };
+
   // Setup For SKIP button
   useEffect(() => {
     if (currentStep === 3 || currentStep === 5 || currentStep === 8) {
@@ -174,7 +178,7 @@ const BusinessListingForm = () => {
     axios
       .post("http://localhost:8083/api/listing/business", dataId, {
         headers: {
-          application: "dir",
+          application: appCode,
           authorization: "Bearer " + token,
         },
       })
@@ -338,7 +342,7 @@ const BusinessListingForm = () => {
   };
 
   if (isInitialLoading) {
-    return <LoadingScreen  />;
+    return <LoadingScreen />;
   }
 
   return (

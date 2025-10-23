@@ -6,12 +6,10 @@
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log("pos", position);
           resolve({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           });
-
         },
         (error) => {
           reject(error);

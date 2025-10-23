@@ -69,7 +69,7 @@ const BusinessListSection = () => {
           >
             <option value="">All Cities</option>
             {dataObj.cityList.map((city) => (
-              <option key={city.u_city_name} value={city.u_city_name}>
+              <option key={city.uni_id} value={city.u_city_name}>
                 {city.u_city_name}
               </option>
             ))}

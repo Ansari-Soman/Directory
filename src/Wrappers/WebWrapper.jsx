@@ -6,11 +6,14 @@ import axios from "axios";
 import { getLocation } from "../Location/CityLocation";
 import { AppProperties } from "../AppProperties";
 import Footer from "../Dashboard/Footer";
+import { AppWindow } from "lucide-react";
 
 const WebWrapper = () => {
+  const loca = AppProperties.loca;
+  const appCode = AppProperties.appCode;
+
   const [listingSuccess, setListtingSuccess] = useState(true);
   const navigate = useNavigate();
-  const loca = AppProperties.loca;
 
   const [token, setToken] = useState(
     "eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOiJ7XCJtYWluX2FwcFwiOntcIm5hbWVcIjpcImF1dG9wb3J0YWxcIiwgXCJhcHBfY29kZVwiOlwiYXV0b1wiLCBcImFwcF9hZGRyZXNzXCI6XCJodHRwOi8vbG9jYWxob3N0OjgwODNcIn0sXCJzZWNvbmRhcnlfYXBwXCI6W119Iiwic3ViIjoiaGlmenVyIiwiZXhwIjoxNzU5OTkyMTIwLCJpYXQiOjE3NTkzODczMjB9.ZBeLNDDc3f7mqZJ3LDS5tqQfW8whTsmWQjMKS4IjPrfll_w5wU7PCVo2RGlEAAPmNIpcRSVbEq7BjnoagFGupw"
@@ -142,13 +145,13 @@ const WebWrapper = () => {
       try {
         const [cities, categories, businesses] = await Promise.all([
           axios.get("http://localhost:8083/api/city/list", {
-            headers: { application: "dir" },
+            headers: { application: appCode },
           }),
           axios.get("http://localhost:8083/api/business/category", {
-            headers: { application: "dir" },
+            headers: { application: appCode },
           }),
           axios.get("http://localhost:8083/api/get/businesses", {
-            headers: { application: "dir" },
+            headers: { application: appCode },
           }),
         ]);
 
@@ -166,6 +169,8 @@ const WebWrapper = () => {
     fetchCities();
   }, []);
 
+
+
   // __________-NEW_DATA-__________
   const handleOnNewData = (value, type) => {
     const newData = {
@@ -177,13 +182,12 @@ const WebWrapper = () => {
     axios
       .post("http://localhost:8083/api/add/new", newData, {
         headers: {
-          application: "dir",
+          application: appCode,
           authorization: "Bearer " + token,
         },
       })
       .then((res) => {
         if (res.data.message === "success") {
-          console.log("in the success");
           setNewDataAdded(!newDataAdded);
         }
       })
@@ -191,20 +195,19 @@ const WebWrapper = () => {
       .finally(() => {});
   };
 
+  // Get location
   useEffect(() => {
     const location = async () => {
       try {
         const res = await getLocation();
-        console.log("res ===", res);
         try {
           const city = await axios.post(
             `http://localhost:8083/api/get/location`,
             res,
             {
-              headers: { application: "dir" },
+              headers: { application: appCode },
             }
           );
-          console.log("city ===", city);
         } catch (err) {
           console.log("Error while fetching city", err);
         }
@@ -216,9 +219,25 @@ const WebWrapper = () => {
     location();
   }, []);
 
+  // Fetching City List
+  const getCityList = async (cityName) => {
+    try {
+      const response = await axios.get(`${loca}/api/get/city/${cityName}`, {
+        headers: { application: appCode },
+      });
+      console.log(response);
+      if (response.data > 0) {
+        return response.data;
+      }
+    } catch (e) {
+      console.log("Error while fething city list");
+    }
+  };
+
   return (
     <DirectoryContext.Provider
       value={{
+        getCityList,
         city,
         setCity,
         token,
