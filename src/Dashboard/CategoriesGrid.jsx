@@ -5,42 +5,77 @@ import gym from "../assets/gym.jpg";
 import hospital from "../assets/hospital.jpg";
 import restaurant from "../assets/restaurant.avif";
 import housing2 from "../assets/housing2.avif";
+import question from "../assets/question.webp";
 
 const CategoriesGrid = () => {
   const categoryData = [
     {
       name: "Housing",
-      image: housing2,
+      image: question,
     },
     {
       name: "Shops",
-      image: shop,
+      image: question,
     },
     {
       name: "Hospitals",
-      image: hospital,
+      image: question,
     },
     {
       name: "Gym",
-      image: gym,
+      image: question,
     },
     {
       name: "Restaurant",
-      image: restaurant,
+      image: question,
     },
     {
       name: "Education",
-      image: education,
+      image: question,
     },
     {
       name: "Housing",
-      image: housing,
+      image: question,
     },
     {
       name: "Shops",
-      image: shop,
+      image: question,
     },
   ];
+  // const categoryData = [
+  //   {
+  //     name: "Housing",
+  //     image: question,
+  //   },
+  //   {
+  //     name: "Shops",
+  //     image: shop,
+  //   },
+  //   {
+  //     name: "Hospitals",
+  //     image: hospital,
+  //   },
+  //   {
+  //     name: "Gym",
+  //     image: gym,
+  //   },
+  //   {
+  //     name: "Restaurant",
+  //     image: restaurant,
+  //   },
+  //   {
+  //     name: "Education",
+  //     image: education,
+  //   },
+  //   {
+  //     name: "Housing",
+  //     image: housing,
+  //   },
+  //   {
+  //     name: "Shops",
+  //     image: shop,
+  //   },
+  // ];
 
   return (
     <div className="w-full bg-gray-50 py-16">

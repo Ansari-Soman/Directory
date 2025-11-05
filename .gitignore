@@ -21,6 +21,10 @@ dist-ssr
 .env.production.local
 .env.test
 .env.test.local
+# Custom local env files
+.env.dev
+.env.prod
+
 
 # Allow example env file
 !.env.example

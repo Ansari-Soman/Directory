@@ -4,30 +4,30 @@ import { cities } from "./data";
 import { DirectoryContext } from "../Context";
 import { data } from "react-router-dom";
 import AsyncSelect from "react-select/async";
+import axios from "axios";
 
 function LocationSearch() {
   // Add this defensive check
   const { dataObj, city, setCity, getCityList } = useContext(DirectoryContext);
-  const temp = getCityList("mum");
-  console.log("temp", temp);
-  if (!dataObj.cityList) {
-    return <div>Loading cities...</div>; // or return null
-  }
-  // console.log(dataObj)
-
-  const options = dataObj.cityList.map((city) => ({
-    value: city.u_city_name,
-    label: city.u_city_name,
-  }));
+  const loadOptions = async (searchTerm) => {
+    const name = searchTerm || "A";
+    const res = await getCityList(name);
+    const options = res.map((city) => ({
+      value: city.name,
+      label: city.name,
+    }));
+    return options;
+  };
 
   return (
-    <div style={{ width: "250px" }}>
+    <div style={{ width: "250px" }} className="z-20">
       <AsyncSelect
-        value={options.find((opt) => opt.value === city) || null}
-        options={options}
-        onChange={(e) => setCity(e.value)}
+        loadOptions={loadOptions}
+        defaultOptions={true}
+        onChange={(e) => setCity(e)}
         placeholder="Search location..."
         isSearchable
+        value={city}
       />
     </div>
   );

@@ -6,8 +6,7 @@ import Listing from "./ListingBusiness/Listing";
 import ListingMessage from "./ListingBusiness/ListingMessage";
 import BusinessListSectionSom from "./Dashboard/BusinessListSection";
 import Test from "./component/Test";
-// import Hero from "./Test Compo/Claude/Hero";
-import Hero from "./Test Compo/Chatgpt/Hero";
+
 
 const MainComponent = () => {
   const routers = createBrowserRouter([
@@ -21,7 +20,7 @@ const MainComponent = () => {
               <div className="relative h-[550px] 2xl:h-[600px] flex justify-center items-center ">
                 <div
                   className="absolute inset-0 bg-cover bg-center "
-                  style={{ backgroundImage: "url('/1.jpg')" }}
+                  style={{ backgroundImage: "url('/question.webp')" }}
                 />
                 <div className="absolute inset-0 bg-black/50" />
                 <div className="relative z-10 w-full">
@@ -29,10 +28,7 @@ const MainComponent = () => {
                 </div>
               </div>
               <CategoriesGrid />
-
               <BusinessListSectionSom />
-              <Test />
-              <Hero />
             </>
           ),
         },

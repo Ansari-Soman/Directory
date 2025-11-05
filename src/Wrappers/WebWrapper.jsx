@@ -11,8 +11,8 @@ import { AppWindow } from "lucide-react";
 const WebWrapper = () => {
   const loca = AppProperties.loca;
   const appCode = AppProperties.appCode;
-
   const [listingSuccess, setListtingSuccess] = useState(true);
+
   const navigate = useNavigate();
 
   const [token, setToken] = useState(
@@ -72,10 +72,12 @@ const WebWrapper = () => {
     secondShiftTo: "",
   });
 
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [addNewWindow, setAddnNewWindow] = useState(false);
   const [newDataAdded, setNewDataAdded] = useState(false);
   const [city, setCity] = useState("");
+
+  // -____________________Converting-Time-To-12-Hours-Format
   const formatTime = (time) => {
     if (!time) return "";
     const [hours, minutes] = time.split(":");
@@ -141,35 +143,46 @@ const WebWrapper = () => {
 
   // FETCHING City List, Category & Businesses
   useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const [cities, categories, businesses] = await Promise.all([
-          axios.get("http://localhost:8083/api/city/list", {
-            headers: { application: appCode },
-          }),
-          axios.get("http://localhost:8083/api/business/category", {
-            headers: { application: appCode },
-          }),
-          axios.get("http://localhost:8083/api/get/businesses", {
-            headers: { application: appCode },
-          }),
-        ]);
+    // -____________________-Fetching City List
+    axios
+      .get(`${loca}/api/city/list`, { headers: { application: appCode } })
+      .then((res) => {
+        if (res.data.record.length > 0) {
+          setDataObj((prev) => ({ ...prev, cityList: res.data.record }));
+        }
+      })
+      .catch((e) => {
+        console.log("Faild city list API", e);
+      });
 
-        setDataObj((prev) => ({
-          ...prev,
-          cityList: cities.data.record,
-          category: categories.data.record,
-          businesses: businesses.data.record,
-        }));
-      } catch (err) {
-        console.log("Error while fetching cityList", err);
-      }
-    };
+    // -____________________-Fetching Category
+    axios
+      .get(`${loca}/api/business/category`, {
+        headers: { application: appCode },
+      })
+      .then((res) => {
+        if (res.data.record.length > 0) {
+          setDataObj((prev) => ({ ...prev, category: res.data.record }));
+        }
+      })
+      .catch((e) => {
+        console.log("Faild category API", e);
+      });
 
-    fetchCities();
+    // -____________________-Fetching Business
+    axios
+      .get(`${loca}/api/get/businesses`, {
+        headers: { application: appCode },
+      })
+      .then((res) => {
+        if (res.data.record.length > 0) {
+          setDataObj((prev) => ({ ...prev, businesses: res.data.record }));
+        }
+      })
+      .catch((e) => {
+        console.log("Faild category API", e);
+      });
   }, []);
-
-
 
   // __________-NEW_DATA-__________
   const handleOnNewData = (value, type) => {
@@ -180,7 +193,7 @@ const WebWrapper = () => {
     };
     console.log("newData === ", newData);
     axios
-      .post("http://localhost:8083/api/add/new", newData, {
+      .post(`${loca}/api/add/new`, newData, {
         headers: {
           application: appCode,
           authorization: "Bearer " + token,
@@ -191,23 +204,23 @@ const WebWrapper = () => {
           setNewDataAdded(!newDataAdded);
         }
       })
-      .catch((e) => console.log(e))
-      .finally(() => {});
+      .catch((e) => console.log(e));
   };
 
-  // Get location
+  // -____________________-Get location
   useEffect(() => {
     const location = async () => {
       try {
         const res = await getLocation();
         try {
-          const city = await axios.post(
-            `http://localhost:8083/api/get/location`,
-            res,
-            {
-              headers: { application: appCode },
-            }
-          );
+          const city = await axios.post(`${loca}/api/get/location`, res, {
+            headers: { application: appCode },
+          });
+          const cityObj = {
+            value: city.data.name,
+            label: city.data.name,
+          };
+          setCity(cityObj);
         } catch (err) {
           console.log("Error while fetching city", err);
         }
@@ -219,21 +232,26 @@ const WebWrapper = () => {
     location();
   }, []);
 
-  // Fetching City List
+  // -____________________-Fetching City List Dynamic
   const getCityList = async (cityName) => {
     try {
       const response = await axios.get(`${loca}/api/get/city/${cityName}`, {
         headers: { application: appCode },
       });
-      console.log(response);
-      if (response.data > 0) {
-        return response.data;
+      console.log("City list dynamic", response.data.record);
+      if (response.data.record.length > 0) {
+        return response.data.record;
+      } else {
+        return [];
       }
     } catch (e) {
       console.log("Error while fething city list");
     }
   };
 
+  useEffect(() => {
+    console.log("City state", city);
+  }, [city]);
   return (
     <DirectoryContext.Provider
       value={{

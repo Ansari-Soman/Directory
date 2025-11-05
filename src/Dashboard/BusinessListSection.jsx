@@ -12,11 +12,13 @@ import {
   Search,
 } from "lucide-react";
 import { businesses } from "./data";
+import LoadingScreen from "../Loading/LoadingScr";
 const BusinessListSection = () => {
   const { dataObj } = useContext(DirectoryContext);
   const filterBusiness = "";
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+
   return (
     <>
       <div className="container mx-auto  px-6 py-3 my-10">
@@ -77,11 +79,15 @@ const BusinessListSection = () => {
         </div>
 
         {/* __________-LISTED-BUSINESS-__________ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {dataObj.businesses.map((business) => (
-            <BusinessCard key={business.uni_id} business={business} />
-          ))}
-        </div>
+        {dataObj.businesses.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {dataObj.businesses.map((business) => (
+              <BusinessCard key={business.uni_id} business={business} />
+            ))}
+          </div>
+        ) : (
+          <LoadingScreen />
+        )}
       </div>
     </>
   );

@@ -32,38 +32,34 @@ const BusinessListingForm = () => {
 
   // Fetching Business class & Establishment
   useEffect(() => {
-    const fetchAllData = async () => {
-      setIsInitialLoading(true);
-      try {
-        const [classes, establishments] = await Promise.all([
-          axios.get(`${loca}/api/class/list`, {
-            headers: { application: appCode },
-          }),
-          axios.get("http://localhost:8083/api/establishment/list", {
-            headers: { application: appCode },
-          }),
-        ]);
+    // -____________________- Fetching Class List Data
+    axios
+      .get(`${loca}/api/class/list`, { headers: { application: appCode } })
+      .then((res) => {
+        if (res.data.record.length > 0) {
+          setDataObj((prev) => ({ ...prev, class: res.data.record }));
+        }
+      })
+      .catch((e) => console.log("Failed class API", e));
 
-        setDataObj((prev) => ({
-          ...prev,
-          class: classes.data.record,
-          establishment: establishments.data.record,
-        }));
-      } catch (error) {
-        console.error("Error fetching initial data:", error);
-      } finally {
-        setIsInitialLoading(false); // Stop loading
-      }
-    };
-
-    fetchAllData();
+    // -____________________-Fetching Establishment list data
+    axios
+      .get(`${loca}/api/establishment/list`, {
+        headers: { application: appCode },
+      })
+      .then((res) => {
+        if (res.data.record.length > 0) {
+          setDataObj((prev) => ({ ...prev, establishment: res.data.record }));
+        }
+      })
+      .catch((e) => console.log("Failed establisment API", e));
   }, []);
 
   // Fethcing City Data
   useEffect(() => {
     if (!formData.city) return;
     axios
-      .get(`http://localhost:8083/api/citydata/${formData.city}`, {
+      .get(`${loca}/api/citydata/${formData.city}`, {
         headers: { application: appCode },
       })
       .then((res) =>
@@ -176,7 +172,7 @@ const BusinessListingForm = () => {
     console.log("form data", formData, "Data ids", dataId);
     setIsInitialLoading(true);
     axios
-      .post("http://localhost:8083/api/listing/business", dataId, {
+      .post(`${loca}/api/listing/business`, dataId, {
         headers: {
           application: appCode,
           authorization: "Bearer " + token,

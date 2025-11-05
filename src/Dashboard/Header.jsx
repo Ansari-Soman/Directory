@@ -1,14 +1,8 @@
-import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { cities } from "./data";
 import LocationSearch from "./LocationSearch";
-import { DirectoryContext } from "../Context";
-import axios from "axios";
-import { getLocation } from "../Location/CityLocation";
+import { useEffect, useState } from "react";
 
 const Header = () => {
-
-
   return (
     <header className="w-full bg-white shadow-md ">
       <div className="container mx-auto flex items-center justify-between px-6 py-3">
