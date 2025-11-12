@@ -11,7 +11,7 @@ import { AppWindow } from "lucide-react";
 const WebWrapper = () => {
   const loca = AppProperties.loca;
   const appCode = AppProperties.appCode;
-  const [listingSuccess, setListtingSuccess] = useState(true);
+  const [listingSuccess, setListtingSuccess] = useState(false);
 
   const navigate = useNavigate();
 
@@ -169,6 +169,7 @@ const WebWrapper = () => {
         console.log("Faild category API", e);
       });
 
+    setIsInitialLoading(true);
     // -____________________-Fetching Business
     axios
       .get(`${loca}/api/get/businesses`, {
@@ -181,6 +182,9 @@ const WebWrapper = () => {
       })
       .catch((e) => {
         console.log("Faild category API", e);
+      })
+      .finally(() => {
+        setIsInitialLoading(false);
       });
   }, []);
 
@@ -238,7 +242,6 @@ const WebWrapper = () => {
       const response = await axios.get(`${loca}/api/get/city/${cityName}`, {
         headers: { application: appCode },
       });
-      console.log("City list dynamic", response.data.record);
       if (response.data.record.length > 0) {
         return response.data.record;
       } else {
@@ -249,9 +252,7 @@ const WebWrapper = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("City state", city);
-  }, [city]);
+
   return (
     <DirectoryContext.Provider
       value={{

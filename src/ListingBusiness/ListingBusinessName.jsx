@@ -4,9 +4,11 @@ import { DirectoryContext } from "../Context";
 import Select from "react-select";
 import SingleShift from "../component/SingleShift";
 import DualShift from "../component/DualShift";
+import AsyncSelect from "react-select/async";
+import { useLoadCityOptions } from "../Location/CityLocation";
 
 const ListingBusinessName = ({ cities }) => {
-  const { handleInputChange, formData, handleBusinessId } =
+  const { handleInputChange, formData, handleBusinessId, city } =
     useContext(DirectoryContext);
   const [isDualShift, setIsDualShift] = useState(false);
 
@@ -14,6 +16,7 @@ const ListingBusinessName = ({ cities }) => {
   if (!cities || !Array.isArray(cities)) {
     return <div>Loading cities...</div>; // or return null
   }
+  const loadOptions = useLoadCityOptions();
 
   const options = cities.map((city) => ({
     value: city.u_city_name,
@@ -156,10 +159,11 @@ const ListingBusinessName = ({ cities }) => {
 
         {/* __________-CITY-________ */}
 
-        <Select
-          value={options.find((opt) => opt.value === formData.city) || null}
+        <AsyncSelect
+          value={city}
           onChange={(e) => handleInputChange("city", e.value)}
-          options={options}
+          loadOptions={loadOptions}
+          defaultOptions={true}
           placeholder="Search location..."
           isSearchable
         />

@@ -14,7 +14,7 @@ import {
 import { businesses } from "./data";
 import LoadingScreen from "../Loading/LoadingScr";
 const BusinessListSection = () => {
-  const { dataObj } = useContext(DirectoryContext);
+  const { dataObj, isInitialLoading } = useContext(DirectoryContext);
   const filterBusiness = "";
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -79,14 +79,19 @@ const BusinessListSection = () => {
         </div>
 
         {/* __________-LISTED-BUSINESS-__________ */}
-        {dataObj.businesses.length > 0 ? (
+
+        {isInitialLoading ? (
+          <LoadingScreen />
+        ) : dataObj.businesses.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {dataObj.businesses.map((business) => (
               <BusinessCard key={business.uni_id} business={business} />
             ))}
           </div>
         ) : (
-          <LoadingScreen />
+          <div className="text-center text-gray-500">
+            Failed to load businesses.
+          </div>
         )}
       </div>
     </>

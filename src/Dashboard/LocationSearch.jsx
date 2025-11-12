@@ -5,19 +5,12 @@ import { DirectoryContext } from "../Context";
 import { data } from "react-router-dom";
 import AsyncSelect from "react-select/async";
 import axios from "axios";
+import { useLoadCityOptions } from "../Location/CityLocation";
 
 function LocationSearch() {
   // Add this defensive check
   const { dataObj, city, setCity, getCityList } = useContext(DirectoryContext);
-  const loadOptions = async (searchTerm) => {
-    const name = searchTerm || "A";
-    const res = await getCityList(name);
-    const options = res.map((city) => ({
-      value: city.name,
-      label: city.name,
-    }));
-    return options;
-  };
+  const loadOptions = useLoadCityOptions();
 
   return (
     <div style={{ width: "250px" }} className="z-20">
@@ -34,3 +27,4 @@ function LocationSearch() {
 }
 
 export default LocationSearch;
+
